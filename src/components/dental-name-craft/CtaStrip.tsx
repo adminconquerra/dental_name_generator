@@ -9,14 +9,14 @@ const CtaStrip = () => {
             <div className="container mx-auto flex items-center justify-center gap-4">
                 <Rocket className="h-6 w-6" />
                 <p className="font-semibold text-sm sm:text-base">
-                    Starting a new practice? Get a free estimate of how many patients you can acquire.
+                    <strong>Launch Your New Clinic with Confidence.</strong> Discover how many new patients you could attract with a free marketing estimate from
                     <Link
                         href="https://pracxcel.com.au"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="font-bold underline ml-2 hover:opacity-80 transition-opacity"
                     >
-                        Learn More
+                        Pracxcel.
                     </Link>
                 </p>
             </div>
