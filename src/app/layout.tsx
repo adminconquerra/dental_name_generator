@@ -17,15 +17,15 @@ const fontUnbounded = Unbounded({
 });
 
 export const metadata: Metadata = {
-  title: 'Dental NameCraft AI – AI-Powered Naming Tool for Dentists',
+  title: 'Pracxcel – AI-Powered Naming Tool for Dentists',
   description:
     'Generate unique dental business names and taglines with AI. Check domain availability and get a full brand kit for your new practice.',
   openGraph: {
-    title: 'Dental NameCraft AI – AI-Powered Naming Tool for Dentists',
+    title: 'Pracxcel – AI-Powered Naming Tool for Dentists',
     description:
       'Generate unique dental business names and taglines with AI. Check domain availability and get a full brand kit for your new practice.',
-    url: 'https://dental-namecraft-ai.com', // Replace with actual domain
-    siteName: 'Dental NameCraft AI',
+    url: 'https://pracxcel.com.au', // Replace with actual domain
+    siteName: 'Pracxcel',
     images: [
       {
         url: '/og-image.png', // Replace with actual OG image URL

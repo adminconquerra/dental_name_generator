@@ -12,7 +12,7 @@ const Footer = () => {
           <Link href="/" className="mb-4">
             <Image 
               src="/logo.png" 
-              alt="Dental NameCraft AI Logo" 
+              alt="Pracxcel Logo" 
               width={180} 
               height={72} 
               className="h-auto"
