@@ -17,11 +17,14 @@ const fontUnbounded = Unbounded({
 });
 
 export const metadata: Metadata = {
-  title: 'Pracxcel – AI-Powered Naming Tool for Dentists',
+  title: 'Pracxcel – Free Dental Business Name Generator Tool',
   description:
     'Generate unique dental business names and taglines with AI. Check domain availability and get a full brand kit for your new practice.',
+  icons: {
+    icon: '/favicon.ico',
+  },
   openGraph: {
-    title: 'Pracxcel – AI-Powered Naming Tool for Dentists',
+    title: 'Pracxcel – Free Dental Business Name Generator Tool',
     description:
       'Generate unique dental business names and taglines with AI. Check domain availability and get a full brand kit for your new practice.',
     url: 'https://pracxcel.com.au', // Replace with actual domain
