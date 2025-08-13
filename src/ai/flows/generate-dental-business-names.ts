@@ -127,8 +127,27 @@ const generateDentalBusinessNamesFlow = ai.defineFlow(
     inputSchema: GenerateDentalBusinessNamesInputSchema,
     outputSchema: GenerateDentalBusinessNamesOutputSchema,
   },
-  async input => {
-    const {output} = await generateNamesPrompt(input);
-    return output!;
+  async (input) => {
+    let attempts = 0;
+    const maxAttempts = 3;
+
+    while (attempts < maxAttempts) {
+      try {
+        const { output } = await generateNamesPrompt(input);
+        if (output) {
+          return output;
+        }
+      } catch (error) {
+        attempts++;
+        if (attempts >= maxAttempts) {
+          console.error('Failed to generate names after multiple attempts:', error);
+          throw new Error('Failed to generate names. Please try again later.');
+        }
+        // Optional: wait for a short period before retrying
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+    }
+    // This part should ideally not be reached, but it's here for safety.
+    throw new Error('Failed to generate names after multiple attempts.');
   }
 );
