@@ -65,7 +65,8 @@ const checkDomainAvailabilityFlow = ai.defineFlow(
     tools: [checkAvailabilityTool],
   },
   async ({name, extensions}) => {
-    const sanitizedName = name.replace(/\s+/g, '').toLowerCase();
+    // Remove all non-alphanumeric characters and convert to lowercase
+    const sanitizedName = name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 
     const checks = extensions.map(async (ext) => {
         const domain = `${sanitizedName}${ext}`;

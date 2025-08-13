@@ -67,7 +67,7 @@ const NameCard = ({ nameData, onSelectName, onToggleFavorite }: NameCardProps) =
                 {nameData.domainStatus === 'error' && <p className="text-xs text-destructive">Could not check domains.</p>}
                 {(nameData.domainStatus === 'idle' || !nameData.domains) && <p className="text-xs text-muted-foreground">Click "See Details" to check.</p>}
                 {nameData.domainStatus === 'done' && nameData.domains && DOMAIN_EXTENSIONS.map(ext => {
-                    const domainName = nameData.name.replace(/\s+/g, '').toLowerCase() + ext;
+                    const domainName = nameData.name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() + ext;
                     const isAvailable = nameData.domains![domainName];
                     return (
                         <TooltipProvider key={ext}>

@@ -122,7 +122,7 @@ const NameDetailsModal = ({
                 {nameData.domainStatus === 'done' && nameData.domains && (
                      <ul className="space-y-2">
                         {DOMAIN_EXTENSIONS.map(ext => {
-                            const domain = nameData.name.replace(/\s+/g, '').toLowerCase() + ext;
+                            const domain = nameData.name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() + ext;
                             const isAvailable = nameData.domains![domain];
                             return (
                                 <li key={ext} className={`flex items-center justify-between ${isAvailable ? 'text-green-600' : 'text-red-600'}`}>
