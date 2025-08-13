@@ -1,23 +1,58 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { GeneratedName } from '@/lib/types';
 import NameCard from './NameCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import TypewriterEffect from './TypewriterEffect';
 import { Badge } from '../ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { checkDomainAvailability } from '@/ai/flows/check-domain-availability';
+import { DOMAIN_EXTENSIONS } from '@/lib/constants';
 
 interface ResultsViewProps {
   names: GeneratedName[];
   isLoading: boolean;
   onSelectName: (name: GeneratedName) => void;
-  onGenerateLogo: (name: string) => void;
 }
 
-const ResultsView = ({ names, isLoading, onSelectName, onGenerateLogo }: ResultsViewProps) => {
+const ResultsView = ({ names, isLoading, onSelectName }: ResultsViewProps) => {
+  const [internalNames, setInternalNames] = useState<GeneratedName[]>(names);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [sortOrder, setSortOrder] = useState<'score' | 'pronounceability'>('score');
+
+  useEffect(() => {
+    setInternalNames(names);
+    // When new names are generated, kick off domain checks for all of them
+    if (names.length > 0) {
+      names.forEach(name => {
+        if (name.domainStatus === 'idle') {
+          handleCheckDomains(name.name);
+        }
+      });
+    }
+  }, [names]);
+
+  const updateNameInState = (name: string, updates: Partial<GeneratedName>) => {
+    setInternalNames(prev =>
+      prev.map(item => (item.name === name ? { ...item, ...updates } : item))
+    );
+  };
+
+  const handleCheckDomains = async (name: string) => {
+    updateNameInState(name, { domainStatus: 'loading' });
+    try {
+        const results = await checkDomainAvailability({ name, extensions: DOMAIN_EXTENSIONS });
+        const availabilityMap = results.reduce((acc, item) => {
+            acc[item.domain] = item.available;
+            return acc;
+        }, {} as Record<string, boolean>);
+        updateNameInState(name, { domains: availabilityMap, domainStatus: 'done' });
+    } catch (e) {
+        updateNameInState(name, { domainStatus: 'error' });
+    }
+  }
+
 
   const handleToggleFavorite = (name: string) => {
     setFavorites(prev =>
@@ -25,7 +60,7 @@ const ResultsView = ({ names, isLoading, onSelectName, onGenerateLogo }: Results
     );
   };
   
-  const sortedNames = [...names].sort((a, b) => {
+  const sortedNames = [...internalNames].sort((a, b) => {
     if (sortOrder === 'score') {
       return b.totalNameScore - a.totalNameScore;
     }
@@ -84,11 +119,10 @@ const ResultsView = ({ names, isLoading, onSelectName, onGenerateLogo }: Results
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sortedNames.map(name => (
             <NameCard
-            key={name.name}
-            nameData={{...name, isFavorite: favorites.includes(name.name)}}
-            onSelectName={onSelectName}
-            onToggleFavorite={handleToggleFavorite}
-            onGenerateLogo={onGenerateLogo}
+              key={name.name}
+              nameData={{...name, isFavorite: favorites.includes(name.name)}}
+              onSelectName={onSelectName}
+              onToggleFavorite={handleToggleFavorite}
             />
         ))}
         </div>

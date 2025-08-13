@@ -1,6 +1,6 @@
 import type { GenerateDentalBusinessNamesOutput, GenerateDentalBusinessNamesInput } from '@/ai/flows/generate-dental-business-names';
 import type { GenerateTaglineAndBioOutput } from '@/ai/flows/generate-tagline-and-bio';
-import type { GenerateLogoMockupOutput } from '@/ai/flows/generate-logo-mockup';
+import type { CheckDomainAvailabilityOutput } from '@/ai/flows/check-domain-availability';
 
 
 export type FormValues = GenerateDentalBusinessNamesInput;
@@ -9,14 +9,14 @@ export type NameData = GenerateDentalBusinessNamesOutput[0];
 
 export type TaglineAndBio = GenerateTaglineAndBioOutput;
 
-export type LogoData = GenerateLogoMockupOutput;
+export type DomainAvailability = CheckDomainAvailabilityOutput;
 
 export type GenerationStatus = 'idle' | 'loading' | 'done' | 'error';
 
 export interface GeneratedName extends NameData {
-  logoDataUri?: string;
   taglineAndBio?: TaglineAndBio;
+  domains?: Record<string, boolean>;
   isFavorite?: boolean;
-  logoStatus: GenerationStatus;
   taglineStatus: GenerationStatus;
+  domainStatus: GenerationStatus;
 }

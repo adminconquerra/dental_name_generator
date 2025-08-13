@@ -7,16 +7,15 @@ import { Progress } from '@/components/ui/progress';
 import { Heart, CheckCircle2, XCircle, HelpCircle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DOMAIN_EXTENSIONS } from '@/lib/constants';
+import { Skeleton } from '../ui/skeleton';
 
 interface NameCardProps {
   nameData: GeneratedName;
   onSelectName: (name: GeneratedName) => void;
   onToggleFavorite: (name: string) => void;
-  onGenerateLogo: (name: string) => void;
 }
 
-const NameCard = ({ nameData, onSelectName, onToggleFavorite, onGenerateLogo }: NameCardProps) => {
-  const domainStatus = Math.random() > 0.3 ? 'available' : 'unavailable';
+const NameCard = ({ nameData, onSelectName, onToggleFavorite }: NameCardProps) => {
 
   return (
     <Card className="flex flex-col h-full hover:shadow-xl hover:-translate-y-1 transition-transform duration-300 bg-card">
@@ -64,9 +63,12 @@ const NameCard = ({ nameData, onSelectName, onToggleFavorite, onGenerateLogo }: 
         <div>
             <h4 className="text-sm font-medium text-foreground mb-2">Domain Availability</h4>
             <div className="flex items-center gap-4">
-                {DOMAIN_EXTENSIONS.map(ext => {
-                    // Mock availability
-                    const isAvailable = Math.random() > 0.3;
+                {nameData.domainStatus === 'loading' && <Skeleton className="h-5 w-full" />}
+                {nameData.domainStatus === 'error' && <p className="text-xs text-destructive">Could not check domains.</p>}
+                {(nameData.domainStatus === 'idle' || !nameData.domains) && <p className="text-xs text-muted-foreground">Click "See Details" to check.</p>}
+                {nameData.domainStatus === 'done' && nameData.domains && DOMAIN_EXTENSIONS.map(ext => {
+                    const domainName = nameData.name.replace(/\s+/g, '').toLowerCase() + ext;
+                    const isAvailable = nameData.domains![domainName];
                     return (
                         <TooltipProvider key={ext}>
                             <Tooltip>
@@ -77,7 +79,7 @@ const NameCard = ({ nameData, onSelectName, onToggleFavorite, onGenerateLogo }: 
                                     </div>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>{nameData.name.replace(/\s+/g, '').toLowerCase()}{ext} is {isAvailable ? 'available' : 'unavailable'}</p>
+                                    <p>{domainName} is {isAvailable ? 'available' : 'unavailable'}</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>

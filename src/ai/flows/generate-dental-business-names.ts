@@ -3,8 +3,8 @@
  * @fileOverview This file defines a Genkit flow for generating dental business name ideas.
  *
  * The flow takes various inputs such as practice type, location, target audience, brand personality, and keywords,
- * and uses OpenAI to generate multiple name ideas. It then scores each name based on pronounceability and
- * overall suitability.
+ * and uses an LLM to generate multiple name ideas. For each name, it also generates a rationale, scores,
+ * a unique brand kit (colors and fonts), and SEO metadata.
  *
  * @exports generateDentalBusinessNames - The main function to trigger the flow.
  * @exports GenerateDentalBusinessNamesInput - The input type for the flow.
@@ -27,11 +27,31 @@ const GenerateDentalBusinessNamesInputSchema = z.object({
 });
 export type GenerateDentalBusinessNamesInput = z.infer<typeof GenerateDentalBusinessNamesInputSchema>;
 
+const ColorPaletteSchema = z.object({
+  primary: z.string().describe('Primary color hex code (e.g., #3870A4).'),
+  accent: z.string().describe('Accent color hex code (e.g., #A7E0DD).'),
+  background: z.string().describe('Background color hex code (e.g., #F0F2F5).'),
+  foreground: z.string().describe('Foreground color hex code (e.g., #2D3748).'),
+});
+
+const BrandKitSchema = z.object({
+  headingFont: z.string().describe("Font for headings (e.g., 'Poppins')."),
+  bodyFont: z.string().describe("Font for UI/body text (e.g., 'Inter')."),
+  colorPalette: ColorPaletteSchema,
+});
+
+const SeoMetadataSchema = z.object({
+  title: z.string().describe('SEO title tag for the business.'),
+  description: z.string().describe('SEO meta description for the business.'),
+});
+
 const DentalBusinessNameSchema = z.object({
   name: z.string().describe('Generated dental business name.'),
   rationale: z.string().describe('Rationale for the generated name.'),
   pronounceabilityScore: z.number().describe('Pronounceability score (0-10).'),
   totalNameScore: z.number().describe('Total name score (0-100).'),
+  brandKit: BrandKitSchema.describe('A unique brand kit for this name.'),
+  seo: SeoMetadataSchema.describe('Unique SEO metadata for this name.'),
 });
 
 const GenerateDentalBusinessNamesOutputSchema = z.array(DentalBusinessNameSchema);
@@ -61,7 +81,19 @@ Include Owner Name: Yes, the owner's name is {{{ownerName}}}.
 
 Important: While the location is provided for context, do not include it in every name. Strive for a good balance of names with and without the location. Some names can be creative and not tied to the location at all.
 
-For each name, provide a 1-line rationale, a pronounceability score (0-10), and a total name score (0-100). Return in JSON format.
+For each name, provide:
+1.  A 1-line rationale.
+2.  A pronounceability score (0-10).
+3.  A total name score (0-100).
+4.  A unique brand kit:
+    -   Suggest a professional heading font (e.g., 'Poppins', 'Montserrat').
+    -   Suggest a readable body font (e.g., 'Inter', 'Lato', 'Roboto').
+    -   Generate a color palette with hex codes for primary, accent, background, and foreground colors. The palette should be inspired by the brand personality but maintain a professional, calming dental aesthetic.
+5.  Unique SEO metadata:
+    -   A title tag (e.g., "{Business Name} | {Location} | Quality Dental Care").
+    -   A meta description (e.g., "Discover top-tier dental services at {Business Name}. We offer a wide range of treatments for the whole family. Book your appointment today!").
+
+Return the full response in a valid JSON array format.
 `,
 });
 

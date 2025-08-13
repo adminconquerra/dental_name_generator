@@ -1,10 +1,11 @@
 'use client';
 
-import type { FormValues, GeneratedName, TaglineAndBio, LogoData } from '@/lib/types';
+import type { FormValues, GeneratedName, DomainAvailability } from '@/lib/types';
 import { useState } from 'react';
 import { generateDentalBusinessNames } from '@/ai/flows/generate-dental-business-names';
 import { generateTaglineAndBio } from '@/ai/flows/generate-tagline-and-bio';
-import { generateLogoMockup } from '@/ai/flows/generate-logo-mockup';
+import { checkDomainAvailability } from '@/ai/flows/check-domain-availability';
+import { DOMAIN_EXTENSIONS } from '@/lib/constants';
 
 import Header from '@/components/dental-name-craft/Header';
 import GeneratorForm from '@/components/dental-name-craft/GeneratorForm';
@@ -30,8 +31,8 @@ export default function Home() {
       const results = await generateDentalBusinessNames(data);
       const namesWithStatus = results.map(name => ({
         ...name,
-        logoStatus: 'idle',
         taglineStatus: 'idle',
+        domainStatus: 'idle',
       }));
       setGeneratedNames(namesWithStatus);
     } catch (e) {
@@ -71,26 +72,31 @@ export default function Home() {
     }
   };
 
-  const handleGenerateLogo = async (name: string) => {
-    if (!formInput) return;
-    updateNameInState(name, { logoStatus: 'loading' });
+  const handleCheckDomains = async (name: string) => {
+    updateNameInState(name, { domainStatus: 'loading' });
     try {
-      const result = await generateLogoMockup({
-        businessName: name,
-        tone: formInput.brandPersonality.join(', '),
-      });
-      updateNameInState(name, { logoDataUri: result.logoDataUri, logoStatus: 'done' });
+        const results = await checkDomainAvailability({ name, extensions: DOMAIN_EXTENSIONS });
+        // Create a map for easy lookup
+        const availabilityMap = results.reduce((acc, item) => {
+            acc[item.domain] = item.available;
+            return acc;
+        }, {} as Record<string, boolean>);
+        updateNameInState(name, { domains: availabilityMap, domainStatus: 'done' });
     } catch (e) {
-      updateNameInState(name, { logoStatus: 'error' });
-      toast({ variant: 'destructive', title: 'Error', description: 'Could not generate logo.' });
+        updateNameInState(name, { domainStatus: 'error' });
+        toast({ variant: 'destructive', title: 'Error', description: 'Could not check domain availability.' });
     }
-  };
+  }
+
 
   const handleSelectName = (name: GeneratedName) => {
     setSelectedName(name);
     setIsModalOpen(true);
-    if (!name.taglineAndBio && name.taglineStatus !== 'loading' && name.taglineStatus !== 'done') {
+    if (name.taglineStatus === 'idle') {
       handleGenerateTaglineAndBio(name.name);
+    }
+    if (name.domainStatus === 'idle') {
+      handleCheckDomains(name.name);
     }
   };
 
@@ -106,7 +112,6 @@ export default function Home() {
             names={generatedNames}
             isLoading={isLoading}
             onSelectName={handleSelectName}
-            onGenerateLogo={handleGenerateLogo}
           />
         </section>
       </div>
@@ -115,7 +120,6 @@ export default function Home() {
           isOpen={isModalOpen}
           onOpenChange={setIsModalOpen}
           nameData={selectedName}
-          onGenerateLogo={handleGenerateLogo}
           onGenerateTagline={handleGenerateTaglineAndBio}
         />
       )}
