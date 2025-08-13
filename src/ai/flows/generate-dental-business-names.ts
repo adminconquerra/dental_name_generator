@@ -18,12 +18,12 @@ import { googleAI } from '@genkit-ai/googleai';
 const GenerateDentalBusinessNamesInputSchema = z.object({
   practiceType: z.string().describe('Type of dental practice (e.g., General, Pediatric).'),
   location: z.string().describe('City or suburb (e.g., Austin).'),
-  country: z.string().optional().describe('Country of the practice (e.g., Australia).'),
+  country: z.string().describe('Country of the practice (e.g., Australia).'),
   targetAudience: z.array(z.string()).describe('Target audience (e.g., Families, Kids).'),
   brandPersonality: z.array(z.string()).describe('Brand personality (e.g., Friendly, Professional).'),
   mustIncludeWords: z.string().optional().describe('Comma-separated words to include.'),
   wordsToAvoid: z.string().optional().describe('Comma-separated words to avoid.'),
-  maxNameLength: z.number().optional().describe('Maximum name length in characters or words.'),
+  maxNameLength: z.coerce.number().positive().optional().describe('Maximum name length in characters or words.'),
   includeOwnerName: z.boolean().optional().describe('Whether to include the owner name.'),
   ownerName: z.string().optional().describe('The name of the owner.'),
 });

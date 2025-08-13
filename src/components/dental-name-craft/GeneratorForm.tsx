@@ -32,7 +32,7 @@ import { Slider } from '../ui/slider';
 const formSchema = z.object({
   practiceType: z.string().min(1, 'Please select a practice type.'),
   location: z.string().min(2, 'Location must be at least 2 characters.'),
-  country: z.string().optional(),
+  country: z.string().min(1, 'Please select a country.'),
   targetAudience: z.array(z.string()).min(1, 'Select at least one target audience.'),
   brandPersonality: z.array(z.string()).min(1, 'Select at least one brand personality.'),
   mustIncludeWords: z.string().optional(),
@@ -122,7 +122,7 @@ const GeneratorForm = ({ onSubmit, isLoading }: GeneratorFormProps) => {
                     <FormLabel>Country</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <SelectTrigger><SelectValue placeholder="Select a country (optional)" /></SelectTrigger>
+                        <SelectTrigger><SelectValue placeholder="Select a country" /></SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {COUNTRIES.map(country => (
@@ -130,7 +130,6 @@ const GeneratorForm = ({ onSubmit, isLoading }: GeneratorFormProps) => {
                         ))}
                       </SelectContent>
                     </Select>
-                    <FormDescription>Select a country to check for country-specific domain extensions (e.g., .com.au).</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
