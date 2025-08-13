@@ -13,9 +13,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", ...fontFamily.sans],
-        headline: ["var(--font-poppins)", ...fontFamily.sans],
-        body: ["var(--font-inter)", ...fontFamily.sans],
+        sans: ["var(--font-manrope)", ...fontFamily.sans],
+        headline: ["var(--font-unbounded)", ...fontFamily.sans],
+        body: ["var(--font-manrope)", ...fontFamily.sans],
       },
       colors: {
         background: 'hsl(var(--background))',

@@ -1,28 +1,29 @@
 import type { Metadata } from 'next';
-import { Inter, Poppins } from 'next/font/google';
+import { Unbounded, Manrope } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 
-const fontInter = Inter({
+const fontManrope = Manrope({
   subsets: ['latin'],
-  variable: '--font-inter',
+  weight: ['400'],
+  variable: '--font-manrope',
 });
 
-const fontPoppins = Poppins({
+const fontUnbounded = Unbounded({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-poppins',
+  weight: ['600'],
+  variable: '--font-unbounded',
 });
 
 export const metadata: Metadata = {
   title: 'Dental NameCraft AI – AI-Powered Naming Tool for Dentists',
   description:
-    'Generate unique dental business names, taglines, and logos with AI. Check domain availability and get a full brand kit for your new practice.',
+    'Generate unique dental business names and taglines with AI. Check domain availability and get a full brand kit for your new practice.',
   openGraph: {
     title: 'Dental NameCraft AI – AI-Powered Naming Tool for Dentists',
     description:
-      'Generate unique dental business names, taglines, and logos with AI. Check domain availability and get a full brand kit for your new practice.',
+      'Generate unique dental business names and taglines with AI. Check domain availability and get a full brand kit for your new practice.',
     url: 'https://dental-namecraft-ai.com', // Replace with actual domain
     siteName: 'Dental NameCraft AI',
     images: [
@@ -43,8 +44,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body suppressHydrationWarning className={cn('min-h-screen bg-background font-sans antialiased', fontInter.variable, fontPoppins.variable)}>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        suppressHydrationWarning
+        className={cn(
+          'min-h-screen bg-background font-body antialiased',
+          fontManrope.variable,
+          fontUnbounded.variable
+        )}
+      >
         {children}
         <Toaster />
       </body>
