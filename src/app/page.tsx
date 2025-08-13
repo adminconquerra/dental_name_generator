@@ -138,6 +138,7 @@ export default function Home() {
             onSelectName={handleSelectName}
             formInput={formInput}
             onGenerateMore={handleGenerateMore}
+            updateNameInState={updateNameInState}
           />
         </section>
       </div>

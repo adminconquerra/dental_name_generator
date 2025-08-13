@@ -19,32 +19,23 @@ interface ResultsViewProps {
   onSelectName: (name: GeneratedName) => void;
   formInput: FormValues | null;
   onGenerateMore: () => void;
+  updateNameInState: (name: string, updates: Partial<GeneratedName>) => void;
 }
 
-const ResultsView = ({ names, isLoading, isGeneratingMore, onSelectName, formInput, onGenerateMore }: ResultsViewProps) => {
-  const [internalNames, setInternalNames] = useState<GeneratedName[]>(names);
+const ResultsView = ({ names, isLoading, isGeneratingMore, onSelectName, formInput, onGenerateMore, updateNameInState }: ResultsViewProps) => {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [sortOrder, setSortOrder] = useState<'score' | 'pronounceability' | 'length'>('score');
 
   useEffect(() => {
     // Only check domains for new names that haven't been checked
-    const namesToCheck = names.filter(n => !internalNames.some(in_ => in_.name === n.name));
-    setInternalNames(names);
+    const namesToCheck = names.filter(n => n.domainStatus === 'idle');
     
     if (namesToCheck.length > 0) {
       namesToCheck.forEach(name => {
-        if (name.domainStatus === 'idle') {
-          handleCheckDomains(name.name);
-        }
+        handleCheckDomains(name.name);
       });
     }
   }, [names]);
-
-  const updateNameInState = (name: string, updates: Partial<GeneratedName>) => {
-    setInternalNames(prev =>
-      prev.map(item => (item.name === name ? { ...item, ...updates } : item))
-    );
-  };
 
   const handleCheckDomains = async (name: string) => {
     updateNameInState(name, { domainStatus: 'loading' });
@@ -68,7 +59,7 @@ const ResultsView = ({ names, isLoading, isGeneratingMore, onSelectName, formInp
   };
   
   const filteredAndSortedNames = useMemo(() => {
-    let namesToDisplay = [...internalNames];
+    let namesToDisplay = [...names];
 
     if (formInput?.maxNameLength) {
         namesToDisplay = namesToDisplay.filter(
@@ -88,7 +79,7 @@ const ResultsView = ({ names, isLoading, isGeneratingMore, onSelectName, formInp
         }
         return 0;
     });
-  }, [internalNames, sortOrder, formInput]);
+  }, [names, sortOrder, formInput]);
 
 
   if (isLoading) {
