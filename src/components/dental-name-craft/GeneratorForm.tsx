@@ -104,7 +104,7 @@ const GeneratorForm = ({ onSubmit, isLoading }: GeneratorFormProps) => {
                   <FormItem>
                     <FormLabel>Location (City or Suburb)</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Austin" {...field} />
+                      <Input placeholder="e.g., Melbourne" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -243,7 +243,7 @@ const GeneratorForm = ({ onSubmit, isLoading }: GeneratorFormProps) => {
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                       <div className="space-y-0.5">
                         <FormLabel>Include Owner Name?</FormLabel>
-                        <FormDescription>e.g., "Dr. Patel Dental"</FormDescription>
+                        <FormDescription>e.g., "Dr. Steve Dental"</FormDescription>
                       </div>
                       <FormControl>
                         <Switch checked={field.value} onCheckedChange={field.onChange} />
