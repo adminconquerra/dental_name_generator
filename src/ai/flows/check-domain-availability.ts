@@ -29,21 +29,22 @@ export type CheckDomainAvailabilityOutput = z.infer<typeof CheckDomainAvailabili
 const checkAvailabilityTool = ai.defineTool(
     {
       name: 'checkAvailabilityTool',
-      description: 'Check if a domain name is available or taken.',
+      description: 'Check if a domain name is available or taken by checking for its Name Server (NS) records.',
       inputSchema: z.object({ domain: z.string().describe("The domain name to check, e.g. example.com") }),
       outputSchema: z.boolean(),
     },
     async ({domain}) => {
       try {
-        await dns.lookup(domain);
-        return false; // Found, so it's unavailable
+        const addresses = await dns.resolveNs(domain);
+        // If we get any NS records, the domain is registered and thus unavailable.
+        return !(addresses && addresses.length > 0);
       } catch (e: any) {
+        // ENOTFOUND means no NS records were found, so the domain is likely available.
         if (e.code === 'ENOTFOUND') {
-          return true; // Not found, so it's available
+          return true; 
         }
-        // Other errors might indicate network issues, etc.
-        // For simplicity, we'll treat them as "unavailable"
-        return false; 
+        // Other errors (e.g., network issues, DNS server timeouts) are treated as "unavailable" for safety.
+        return false;
       }
     }
 );
