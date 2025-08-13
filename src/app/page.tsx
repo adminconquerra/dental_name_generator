@@ -14,6 +14,7 @@ import ResultsView from '@/components/dental-name-craft/ResultsView';
 import NameDetailsModal from '@/components/dental-name-craft/NameDetailsModal';
 import Footer from '@/components/dental-name-craft/Footer';
 import { useToast } from '@/hooks/use-toast';
+import Testimonials from '@/components/dental-name-craft/Testimonials';
 
 export default function Home() {
   const [formInput, setFormInput] = useState<FormValues | null>(null);
@@ -152,6 +153,9 @@ export default function Home() {
               onGenerateMore={handleGenerateMore}
               updateNameInState={updateNameInState}
             />
+          </section>
+           <section id="testimonials" className="w-full mt-12">
+            <Testimonials />
           </section>
         </div>
         {selectedName && (
