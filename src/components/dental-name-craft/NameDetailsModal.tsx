@@ -7,17 +7,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, ClipboardCopy, Download, Loader2, Twitter, Bot, FileText, Palette, Type, XCircle } from 'lucide-react';
+import { CheckCircle2, ClipboardCopy, Loader2, Twitter, Bot, FileText, Palette, Type } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { ScrollArea } from '../ui/scroll-area';
 import { DOMAIN_EXTENSIONS } from '@/lib/constants';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-import { useRef } from 'react';
 
 interface NameDetailsModalProps {
   isOpen: boolean;
@@ -33,7 +29,6 @@ const NameDetailsModal = ({
   onGenerateTagline,
 }: NameDetailsModalProps) => {
   const { toast } = useToast();
-  const brandKitRef = useRef<HTMLDivElement>(null);
 
   if (!nameData) return null;
   
@@ -44,26 +39,6 @@ const NameDetailsModal = ({
       description: text,
     });
   };
-
-  const handleDownloadBrandKit = () => {
-    if (!brandKitRef.current) return;
-    html2canvas(brandKitRef.current, { backgroundColor: null }).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'px', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const canvasWidth = canvas.width;
-      const canvasHeight = canvas.height;
-      const ratio = canvasWidth / canvasHeight;
-      const width = pdfWidth;
-      const height = width / ratio;
-
-      pdf.setFontSize(22);
-      pdf.text(`Brand Kit: ${nameData.name}`, 20, 30);
-      pdf.addImage(imgData, 'PNG', 20, 50, width - 40, height - 50);
-      pdf.save(`${nameData.name.replace(/\s+/g, '-')}-brand-kit.pdf`);
-    })
-  }
 
   const { brandKit, seo } = nameData;
 
@@ -107,7 +82,7 @@ const NameDetailsModal = ({
               </div>
             </div>
              {/* Brand Kit Section */}
-             <div ref={brandKitRef} className="p-4 bg-card rounded-lg">
+             <div className="p-4 bg-card rounded-lg">
               <h3 className="font-headline text-lg font-semibold mb-2 flex items-center gap-2"><Palette className="text-primary"/> Brand Kit</h3>
                <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
                    <div className="flex items-center justify-between">
@@ -181,12 +156,6 @@ const NameDetailsModal = ({
           </div>
         </div>
         </ScrollArea>
-         <DialogFooter className="pt-4">
-            <Button onClick={handleDownloadBrandKit}>
-                <Download className="mr-2 h-4 w-4" />
-                Download Brand Kit
-            </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
