@@ -135,12 +135,6 @@ const NameDetailsModal = ({
                         })}
                      </ul>
                 )}
-                 <p className="text-sm font-semibold mt-4">Social Handles (Mock)</p>
-                 <ul className="space-y-2">
-                    <li className="flex items-center justify-between text-green-600">Twitter <Badge variant="secondary">Available</Badge></li>
-                    <li className="flex items-center justify-between text-green-600">Instagram <Badge variant="secondary">Available</Badge></li>
-                    <li className="flex items-center justify-between text-red-600">Facebook <Badge variant="destructive">Taken</Badge></li>
-                 </ul>
               </div>
             </div>
             {/* SEO Section */}
