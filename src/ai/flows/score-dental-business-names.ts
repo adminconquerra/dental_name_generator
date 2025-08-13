@@ -9,6 +9,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import { googleAI } from '@genkit-ai/googleai';
 import {z} from 'genkit';
 
 const ScoreDentalBusinessNameInputSchema = z.object({
@@ -39,6 +40,7 @@ const prompt = ai.definePrompt({
   name: 'scoreDentalBusinessNamePrompt',
   input: {schema: ScoreDentalBusinessNameInputSchema},
   output: {schema: ScoreDentalBusinessNameOutputSchema},
+  model: googleAI.model('gemini-1.5-flash-latest'),
   prompt: `You are an expert in branding and naming for dental businesses.
 
 You will receive a dental business name, and you will score it based on its pronounceability and suitability for a dental business.

@@ -13,6 +13,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { googleAI } from '@genkit-ai/googleai';
 
 const GenerateDentalBusinessNamesInputSchema = z.object({
   practiceType: z.string().describe('Type of dental practice (e.g., General, Pediatric).'),
@@ -35,8 +36,8 @@ const ColorPaletteSchema = z.object({
 });
 
 const BrandKitSchema = z.object({
-  headingFont: z.string().describe("Font for headings (e.g., 'Poppins')."),
-  bodyFont: z.string().describe("Font for UI/body text (e.g., 'Inter')."),
+  headingFont: z.string().describe("Font for headings (e.g., 'Poppins', 'Montserrat')."),
+  bodyFont: z.string().describe("Font for UI/body text (e.g., 'Inter', 'Lato', 'Roboto')."),
   colorPalette: ColorPaletteSchema,
 });
 
@@ -65,6 +66,7 @@ const generateNamesPrompt = ai.definePrompt({
   name: 'generateNamesPrompt',
   input: {schema: GenerateDentalBusinessNamesInputSchema},
   output: {schema: GenerateDentalBusinessNamesOutputSchema},
+  model: googleAI.model('gemini-1.5-flash-latest'),
   prompt: `You are a creative brand name generator for dental businesses. Generate at least 12 name ideas based on the following criteria:
 
 Practice Type: {{{practiceType}}}

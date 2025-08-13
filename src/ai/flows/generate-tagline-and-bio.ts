@@ -8,6 +8,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import { googleAI } from '@genkit-ai/googleai';
 import {z} from 'genkit';
 
 const GenerateTaglineAndBioInputSchema = z.object({
@@ -30,6 +31,7 @@ const generateTaglineAndBioPrompt = ai.definePrompt({
   name: 'generateTaglineAndBioPrompt',
   input: {schema: GenerateTaglineAndBioInputSchema},
   output: {schema: GenerateTaglineAndBioOutputSchema},
+  model: googleAI.model('gemini-1.5-flash-latest'),
   prompt: `You are a branding expert specializing in creating taglines and social media bios for businesses.
 
   Generate a one-line tagline and a short social media bio (150 characters max) for the following business:
