@@ -125,7 +125,6 @@ const GeneratorForm = ({ onSubmit, isLoading }: GeneratorFormProps) => {
                         <SelectTrigger><SelectValue placeholder="Select a country (optional)" /></SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
                         {COUNTRIES.map(country => (
                           <SelectItem key={country.value} value={country.value}>{country.label}</SelectItem>
                         ))}
