@@ -12,7 +12,7 @@ const Header = () => {
       </div>
       <p className="mt-4 text-lg text-foreground/80 max-w-2xl mx-auto">
         Your AI-powered partner for crafting the perfect dental brand identity.
-        Generate names, logos, and taglines in seconds.
+        Generate names and taglines in seconds.
       </p>
     </header>
   );
