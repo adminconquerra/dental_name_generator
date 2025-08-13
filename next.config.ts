@@ -18,6 +18,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  env: {
+    NAMECHEAP_AFFILIATE_ID: process.env.NAMECHEAP_AFFILIATE_ID,
+  }
 };
 
 export default nextConfig;

@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, ClipboardCopy, Loader2, Twitter, Bot, FileText, Palette, Type } from 'lucide-react';
+import { CheckCircle2, ClipboardCopy, Loader2, Twitter, Bot, FileText, Palette, Type, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { ScrollArea } from '../ui/scroll-area';
 import { DOMAIN_EXTENSIONS, COUNTRIES } from '@/lib/constants';
@@ -56,6 +56,13 @@ const NameDetailsModal = ({
   };
 
   const allDomainExtensions = getDomainExtensions();
+
+  const affiliateId = process.env.NAMECHEAP_AFFILIATE_ID;
+
+  const getAffiliateLink = (domain: string) => {
+    if (!affiliateId) return `https://www.namecheap.com/domains/registration/results/?domain=${domain}`;
+    return `https://www.namecheap.com/domains/registration/results/?domain=${domain}&affId=${affiliateId}`;
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -140,11 +147,17 @@ const NameDetailsModal = ({
                             const domain = nameData.name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() + ext;
                             const isAvailable = nameData.domains![domain];
                             return (
-                                <li key={ext} className={`flex items-center justify-between ${isAvailable ? 'text-green-600' : 'text-red-600'}`}>
-                                    {domain} 
-                                    <Badge variant={isAvailable ? 'secondary' : 'destructive'}>
-                                        {isAvailable ? 'Available' : 'Taken'}
-                                    </Badge>
+                                <li key={ext} className='flex items-center justify-between'>
+                                    <span className={isAvailable ? 'text-green-600' : 'text-red-600'}>{domain}</span>
+                                    {isAvailable ? (
+                                        <Button asChild size="sm" variant="secondary">
+                                            <a href={getAffiliateLink(domain)} target="_blank" rel="noopener noreferrer">
+                                                Buy <ExternalLink className="ml-2 h-4 w-4" />
+                                            </a>
+                                        </Button>
+                                    ) : (
+                                        <Badge variant='destructive'>Taken</Badge>
+                                    )}
                                 </li>
                             )
                         })}
