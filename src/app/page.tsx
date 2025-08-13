@@ -1,6 +1,6 @@
 'use client';
 
-import type { FormValues, GeneratedName, DomainAvailability } from '@/lib/types';
+import type { FormValues, GeneratedName } from '@/lib/types';
 import { useState } from 'react';
 import { generateDentalBusinessNames } from '@/ai/flows/generate-dental-business-names';
 import { generateTaglineAndBio } from '@/ai/flows/generate-tagline-and-bio';
@@ -112,6 +112,7 @@ export default function Home() {
             names={generatedNames}
             isLoading={isLoading}
             onSelectName={handleSelectName}
+            formInput={formInput}
           />
         </section>
       </div>

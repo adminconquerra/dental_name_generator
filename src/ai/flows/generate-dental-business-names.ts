@@ -65,7 +65,7 @@ const generateNamesPrompt = ai.definePrompt({
   name: 'generateNamesPrompt',
   input: {schema: GenerateDentalBusinessNamesInputSchema},
   output: {schema: GenerateDentalBusinessNamesOutputSchema},
-  prompt: `You are a creative brand name generator for dental businesses. Generate multiple name ideas based on the following criteria:
+  prompt: `You are a creative brand name generator for dental businesses. Generate at least 12 name ideas based on the following criteria:
 
 Practice Type: {{{practiceType}}}
 Location: {{{location}}}

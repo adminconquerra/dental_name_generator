@@ -27,6 +27,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Wand2 } from 'lucide-react';
 import { TARGET_AUDIENCES, BRAND_PERSONALITIES, PRACTICE_TYPES } from '@/lib/constants';
 import type { FormValues } from '@/lib/types';
+import { Slider } from '../ui/slider';
 
 const formSchema = z.object({
   practiceType: z.string().min(1, 'Please select a practice type.'),
@@ -58,7 +59,7 @@ const GeneratorForm = ({ onSubmit, isLoading }: GeneratorFormProps) => {
       brandPersonality: [],
       mustIncludeWords: '',
       wordsToAvoid: '',
-      maxNameLength: 20,
+      maxNameLength: 30,
       includeOwnerName: false,
       ownerName: '',
     },
@@ -213,6 +214,26 @@ const GeneratorForm = ({ onSubmit, isLoading }: GeneratorFormProps) => {
                 )}
               />
             </div>
+            
+            <FormField
+                control={form.control}
+                name="maxNameLength"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Max Name Length: <span className="text-primary font-bold">{field.value}</span> characters</FormLabel>
+                        <FormControl>
+                            <Slider
+                                min={10}
+                                max={50}
+                                step={1}
+                                value={[field.value || 30]}
+                                onValueChange={(vals) => field.onChange(vals[0])}
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
                 <FormField

@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import type { GeneratedName } from '@/lib/types';
+import React, { useState, useEffect, useMemo } from 'react';
+import type { GeneratedName, FormValues } from '@/lib/types';
 import NameCard from './NameCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import TypewriterEffect from './TypewriterEffect';
@@ -14,12 +14,13 @@ interface ResultsViewProps {
   names: GeneratedName[];
   isLoading: boolean;
   onSelectName: (name: GeneratedName) => void;
+  formInput: FormValues | null;
 }
 
-const ResultsView = ({ names, isLoading, onSelectName }: ResultsViewProps) => {
+const ResultsView = ({ names, isLoading, onSelectName, formInput }: ResultsViewProps) => {
   const [internalNames, setInternalNames] = useState<GeneratedName[]>(names);
   const [favorites, setFavorites] = useState<string[]>([]);
-  const [sortOrder, setSortOrder] = useState<'score' | 'pronounceability'>('score');
+  const [sortOrder, setSortOrder] = useState<'score' | 'pronounceability' | 'length'>('score');
 
   useEffect(() => {
     setInternalNames(names);
@@ -60,17 +61,34 @@ const ResultsView = ({ names, isLoading, onSelectName }: ResultsViewProps) => {
     );
   };
   
-  const sortedNames = [...internalNames].sort((a, b) => {
-    if (sortOrder === 'score') {
-      return b.totalNameScore - a.totalNameScore;
+  const filteredAndSortedNames = useMemo(() => {
+    let namesToDisplay = [...internalNames];
+
+    if (formInput?.maxNameLength) {
+        namesToDisplay = namesToDisplay.filter(
+            (name) => name.name.length <= formInput.maxNameLength!
+        );
     }
-    return b.pronounceabilityScore - a.pronounceabilityScore;
-  });
+
+    return namesToDisplay.sort((a, b) => {
+        if (sortOrder === 'score') {
+            return b.totalNameScore - a.totalNameScore;
+        }
+        if (sortOrder === 'pronounceability') {
+            return b.pronounceabilityScore - a.pronounceabilityScore;
+        }
+        if (sortOrder === 'length') {
+            return a.name.length - b.name.length;
+        }
+        return 0;
+    });
+  }, [internalNames, sortOrder, formInput]);
+
 
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Array.from({ length: 9 }).map((_, i) => (
+        {Array.from({ length: 12 }).map((_, i) => (
           <div key={i} className="flex flex-col space-y-3 p-4 border rounded-lg bg-card">
             <Skeleton className="h-6 w-3/4" />
             <Skeleton className="h-4 w-full" />
@@ -104,7 +122,7 @@ const ResultsView = ({ names, isLoading, onSelectName }: ResultsViewProps) => {
         <div className="flex justify-between items-center mb-6">
             <h2 className="text-3xl font-headline font-bold text-primary">
                 Generated Names
-                <Badge variant="secondary" className="ml-3 text-lg">{names.length}</Badge>
+                <Badge variant="secondary" className="ml-3 text-lg">{filteredAndSortedNames.length}</Badge>
             </h2>
             <Select value={sortOrder} onValueChange={(value) => setSortOrder(value as any)}>
                 <SelectTrigger className="w-[200px]">
@@ -113,11 +131,12 @@ const ResultsView = ({ names, isLoading, onSelectName }: ResultsViewProps) => {
                 <SelectContent>
                     <SelectItem value="score">Sort by Total Score</SelectItem>
                     <SelectItem value="pronounceability">Sort by Pronounceability</SelectItem>
+                    <SelectItem value="length">Sort by Name Length</SelectItem>
                 </SelectContent>
             </Select>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sortedNames.map(name => (
+        {filteredAndSortedNames.map(name => (
             <NameCard
               key={name.name}
               nameData={{...name, isFavorite: favorites.includes(name.name)}}
