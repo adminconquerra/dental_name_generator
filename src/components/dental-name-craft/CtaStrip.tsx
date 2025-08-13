@@ -9,7 +9,7 @@ const CtaStrip = () => {
             <div className="container mx-auto flex items-start justify-start gap-4">
                 <Rocket className="h-6 w-6 flex-shrink-0 mt-1" />
                 <p className="font-semibold text-sm sm:text-base">
-                    <strong>Launch Your New Clinic with Confidence.</strong> Discover how many new patients you could attract with a free marketing estimate from
+                    <strong>Launch Your New Clinic with Confidence.</strong> Get a free marketing estimate from
                     <Link
                         href="https://pracxcel.com.au"
                         target="_blank"
