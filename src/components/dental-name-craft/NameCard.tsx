@@ -51,14 +51,14 @@ const NameCard = ({ nameData, onSelectName, onToggleFavorite, domainExtensions }
             <span className="text-sm font-medium text-foreground">Total Score</span>
             <span className="text-sm font-bold text-primary">{nameData.totalNameScore}/100</span>
           </div>
-          <Progress value={nameData.totalNameScore} />
+          <Progress value={nameData.totalNameScore} className="[&>div]:bg-[#555]" />
         </div>
         <div>
           <div className="flex justify-between items-center mb-1">
             <span className="text-sm font-medium text-foreground">Pronounceability</span>
             <span className="text-sm font-bold text-primary">{nameData.pronounceabilityScore}/10</span>
           </div>
-          <Progress value={nameData.pronounceabilityScore * 10} />
+          <Progress value={nameData.pronounceabilityScore * 10} className="[&>div]:bg-[#555]" />
         </div>
         <div>
             <h4 className="text-sm font-medium text-foreground mb-2">Domain Availability</h4>
@@ -90,7 +90,7 @@ const NameCard = ({ nameData, onSelectName, onToggleFavorite, domainExtensions }
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={() => onSelectName(nameData)} className="w-full">See Details</Button>
+        <Button onClick={() => onSelectName(nameData)} className="w-full font-semibold">See Details</Button>
       </CardFooter>
     </Card>
   );

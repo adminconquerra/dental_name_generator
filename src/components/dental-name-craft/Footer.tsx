@@ -23,9 +23,9 @@ const Footer = () => {
           </p>
         </div>
         <div className="text-center md:text-left">
-          <h3 className="font-headline text-lg font-semibold text-primary mb-2">The Best Free Dental Business Name Generator</h3>
+          <h3 className="font-headline text-lg font-semibold text-primary mb-2">100% Free Dental Business Name Generator Tool</h3>
           <p className="text-sm text-muted-foreground">
-            Struggling to find the perfect name for your new clinic? Our free dental business name generator tool is here to help. Powered by advanced AI, this tool provides instant, creative, and professional name suggestions tailored to your practice. Whether you're a general, pediatric, or cosmetic dentist, our free dental business name generator tool helps you create a memorable brand identity, check domain availability, and even get a full brand kit. Start building your brand today with the ultimate free dental business name generator tool.
+          The most advanced AI-powered naming tool designed for dentists. Instantly generate memorable, practice-specific clinic names, verify global domain and country-specific TLD availability, and download a free mini brand kit with color palettes and naming rationale. Ideal for general dentistry, family clinics, cosmetic dentists, pediatric dentistry, orthodontics, endodontics, periodontics, implant & oral surgery clinics, prosthodontics, sedation dentistry, emergency dental centres and multi-location practices. No signup required.
           </p>
         </div>
       </div>
