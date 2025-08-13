@@ -59,6 +59,8 @@ Max Name Length: {{{maxNameLength}}}
 Include Owner Name: Yes, the owner's name is {{{ownerName}}}.
 {{/if}}
 
+Important: While the location is provided for context, do not include it in every name. Strive for a good balance of names with and without the location. Some names can be creative and not tied to the location at all.
+
 For each name, provide a 1-line rationale, a pronounceability score (0-10), and a total name score (0-100). Return in JSON format.
 `,
 });
