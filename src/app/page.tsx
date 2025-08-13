@@ -143,6 +143,9 @@ export default function Home() {
           <section id="generator" className="w-full mt-8">
             <GeneratorForm onSubmit={(data) => handleGenerateNames(data, false)} isLoading={isLoading} />
           </section>
+          <section id="testimonials" className="w-full mt-12">
+            <Testimonials />
+          </section>
           <section id="results" ref={resultsRef} className="w-full mt-12 scroll-mt-20">
             <ResultsView
               names={generatedNames}
@@ -153,9 +156,6 @@ export default function Home() {
               onGenerateMore={handleGenerateMore}
               updateNameInState={updateNameInState}
             />
-          </section>
-           <section id="testimonials" className="w-full mt-12">
-            <Testimonials />
           </section>
         </div>
         {selectedName && (
