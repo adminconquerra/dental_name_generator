@@ -17,16 +17,22 @@ export default function Home() {
   const [formInput, setFormInput] = useState<FormValues | null>(null);
   const [generatedNames, setGeneratedNames] = useState<GeneratedName[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isGeneratingMore, setIsGeneratingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedName, setSelectedName] = useState<GeneratedName | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { toast } = useToast();
 
-  const handleGenerateNames = async (data: FormValues) => {
-    setIsLoading(true);
+  const handleGenerateNames = async (data: FormValues, append = false) => {
+    if (append) {
+      setIsGeneratingMore(true);
+    } else {
+      setIsLoading(true);
+      setGeneratedNames([]);
+      setFormInput(data);
+    }
     setError(null);
-    setGeneratedNames([]);
-    setFormInput(data);
+
     try {
       const results = await generateDentalBusinessNames(data);
       const namesWithStatus = results.map(name => ({
@@ -34,7 +40,12 @@ export default function Home() {
         taglineStatus: 'idle',
         domainStatus: 'idle',
       }));
-      setGeneratedNames(namesWithStatus);
+
+      if (append) {
+        setGeneratedNames(prev => [...prev, ...namesWithStatus]);
+      } else {
+        setGeneratedNames(namesWithStatus);
+      }
     } catch (e) {
       const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
       setError(errorMessage);
@@ -45,8 +56,16 @@ export default function Home() {
       });
     } finally {
       setIsLoading(false);
+      setIsGeneratingMore(false);
     }
   };
+
+  const handleGenerateMore = () => {
+    if (formInput) {
+      handleGenerateNames(formInput, true);
+    }
+  };
+
 
   const updateNameInState = (name: string, updates: Partial<GeneratedName>) => {
     setGeneratedNames(prev =>
@@ -105,14 +124,16 @@ export default function Home() {
       <div className="w-full max-w-7xl mx-auto">
         <Header />
         <section id="generator" className="w-full mt-8">
-          <GeneratorForm onSubmit={handleGenerateNames} isLoading={isLoading} />
+          <GeneratorForm onSubmit={(data) => handleGenerateNames(data, false)} isLoading={isLoading} />
         </section>
         <section id="results" className="w-full mt-12">
           <ResultsView
             names={generatedNames}
             isLoading={isLoading}
+            isGeneratingMore={isGeneratingMore}
             onSelectName={handleSelectName}
             formInput={formInput}
+            onGenerateMore={handleGenerateMore}
           />
         </section>
       </div>

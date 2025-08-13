@@ -6,6 +6,8 @@ import NameCard from './NameCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import TypewriterEffect from './TypewriterEffect';
 import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Loader2, Wand2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { checkDomainAvailability } from '@/ai/flows/check-domain-availability';
 import { DOMAIN_EXTENSIONS } from '@/lib/constants';
@@ -13,20 +15,24 @@ import { DOMAIN_EXTENSIONS } from '@/lib/constants';
 interface ResultsViewProps {
   names: GeneratedName[];
   isLoading: boolean;
+  isGeneratingMore: boolean;
   onSelectName: (name: GeneratedName) => void;
   formInput: FormValues | null;
+  onGenerateMore: () => void;
 }
 
-const ResultsView = ({ names, isLoading, onSelectName, formInput }: ResultsViewProps) => {
+const ResultsView = ({ names, isLoading, isGeneratingMore, onSelectName, formInput, onGenerateMore }: ResultsViewProps) => {
   const [internalNames, setInternalNames] = useState<GeneratedName[]>(names);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [sortOrder, setSortOrder] = useState<'score' | 'pronounceability' | 'length'>('score');
 
   useEffect(() => {
+    // Only check domains for new names that haven't been checked
+    const namesToCheck = names.filter(n => !internalNames.some(in_ => in_.name === n.name));
     setInternalNames(names);
-    // When new names are generated, kick off domain checks for all of them
-    if (names.length > 0) {
-      names.forEach(name => {
+    
+    if (namesToCheck.length > 0) {
+      namesToCheck.forEach(name => {
         if (name.domainStatus === 'idle') {
           handleCheckDomains(name.name);
         }
@@ -144,6 +150,21 @@ const ResultsView = ({ names, isLoading, onSelectName, formInput }: ResultsViewP
               onToggleFavorite={handleToggleFavorite}
             />
         ))}
+        </div>
+        <div className="flex justify-center mt-8">
+            <Button onClick={onGenerateMore} size="lg" disabled={isGeneratingMore} className="font-bold text-lg">
+                {isGeneratingMore ? (
+                    <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Generating...
+                    </>
+                ) : (
+                    <>
+                        <Wand2 className="mr-2 h-5 w-5" />
+                        Generate More
+                    </>
+                )}
+            </Button>
         </div>
     </div>
   );
