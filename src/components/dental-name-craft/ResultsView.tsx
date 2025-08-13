@@ -10,7 +10,7 @@ import { Button } from '../ui/button';
 import { Loader2, Wand2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { checkDomainAvailability } from '@/ai/flows/check-domain-availability';
-import { DOMAIN_EXTENSIONS } from '@/lib/constants';
+import { DOMAIN_EXTENSIONS, COUNTRIES } from '@/lib/constants';
 
 interface ResultsViewProps {
   names: GeneratedName[];
@@ -32,15 +32,23 @@ const ResultsView = ({ names, isLoading, isGeneratingMore, onSelectName, formInp
     
     if (namesToCheck.length > 0) {
       namesToCheck.forEach(name => {
-        handleCheckDomains(name.name);
+        handleCheckDomains(name.name, formInput?.country);
       });
     }
-  }, [names]);
+  }, [names, formInput]);
 
-  const handleCheckDomains = async (name: string) => {
+  const handleCheckDomains = async (name: string, country?: string) => {
     updateNameInState(name, { domainStatus: 'loading' });
+    let extensions = [...DOMAIN_EXTENSIONS];
+    if (country) {
+        const countryData = COUNTRIES.find(c => c.value === country);
+        if (countryData && countryData.tld) {
+            extensions.push(countryData.tld);
+        }
+    }
+
     try {
-        const results = await checkDomainAvailability({ name, extensions: DOMAIN_EXTENSIONS });
+        const results = await checkDomainAvailability({ name, extensions });
         const availabilityMap = results.reduce((acc, item) => {
             acc[item.domain] = item.available;
             return acc;
@@ -114,6 +122,18 @@ const ResultsView = ({ names, isLoading, isGeneratingMore, onSelectName, formInp
     );
   }
 
+  const getDomainExtensions = () => {
+    let extensions = [...DOMAIN_EXTENSIONS];
+    if (formInput?.country) {
+      const countryData = COUNTRIES.find(c => c.value === formInput.country);
+      if (countryData?.tld && !extensions.includes(countryData.tld)) {
+        extensions.push(countryData.tld);
+      }
+    }
+    return extensions;
+  };
+  const allDomainExtensions = getDomainExtensions();
+
   return (
     <div>
         <div className="flex justify-between items-center mb-6">
@@ -139,6 +159,7 @@ const ResultsView = ({ names, isLoading, isGeneratingMore, onSelectName, formInp
               nameData={{...name, isFavorite: favorites.includes(name.name)}}
               onSelectName={onSelectName}
               onToggleFavorite={handleToggleFavorite}
+              domainExtensions={allDomainExtensions}
             />
         ))}
         </div>

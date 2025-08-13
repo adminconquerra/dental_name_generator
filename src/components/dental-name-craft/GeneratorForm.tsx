@@ -25,13 +25,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Wand2 } from 'lucide-react';
-import { TARGET_AUDIENCES, BRAND_PERSONALITIES, PRACTICE_TYPES } from '@/lib/constants';
+import { TARGET_AUDIENCES, BRAND_PERSONALITIES, PRACTICE_TYPES, COUNTRIES } from '@/lib/constants';
 import type { FormValues } from '@/lib/types';
 import { Slider } from '../ui/slider';
 
 const formSchema = z.object({
   practiceType: z.string().min(1, 'Please select a practice type.'),
   location: z.string().min(2, 'Location must be at least 2 characters.'),
+  country: z.string().optional(),
   targetAudience: z.array(z.string()).min(1, 'Select at least one target audience.'),
   brandPersonality: z.array(z.string()).min(1, 'Select at least one brand personality.'),
   mustIncludeWords: z.string().optional(),
@@ -55,6 +56,7 @@ const GeneratorForm = ({ onSubmit, isLoading }: GeneratorFormProps) => {
     defaultValues: {
       practiceType: 'General',
       location: '',
+      country: '',
       targetAudience: [],
       brandPersonality: [],
       mustIncludeWords: '',
@@ -112,6 +114,29 @@ const GeneratorForm = ({ onSubmit, isLoading }: GeneratorFormProps) => {
               />
             </div>
             
+            <FormField
+                control={form.control}
+                name="country"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Country</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger><SelectValue placeholder="Select a country (optional)" /></SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="">None</SelectItem>
+                        {COUNTRIES.map(country => (
+                          <SelectItem key={country.value} value={country.value}>{country.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>Select a country to check for country-specific domain extensions (e.g., .com.au).</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <FormField
                   control={form.control}
@@ -259,7 +284,7 @@ const GeneratorForm = ({ onSubmit, isLoading }: GeneratorFormProps) => {
                       <FormItem>
                         <FormLabel>Owner Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="e.g., Dr. Patel" {...field} />
+                          <Input placeholder="e.g., Dr. Steve" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

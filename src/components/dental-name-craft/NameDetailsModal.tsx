@@ -13,13 +13,14 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, ClipboardCopy, Loader2, Twitter, Bot, FileText, Palette, Type } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { ScrollArea } from '../ui/scroll-area';
-import { DOMAIN_EXTENSIONS } from '@/lib/constants';
+import { DOMAIN_EXTENSIONS, COUNTRIES } from '@/lib/constants';
 
 interface NameDetailsModalProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   nameData: GeneratedName | null;
   onGenerateTagline: (name: string) => void;
+  country?: string;
 }
 
 const NameDetailsModal = ({
@@ -27,6 +28,7 @@ const NameDetailsModal = ({
   onOpenChange,
   nameData,
   onGenerateTagline,
+  country
 }: NameDetailsModalProps) => {
   const { toast } = useToast();
 
@@ -41,6 +43,19 @@ const NameDetailsModal = ({
   };
 
   const { brandKit, seo } = nameData;
+
+  const getDomainExtensions = () => {
+    let extensions = [...DOMAIN_EXTENSIONS];
+    if (country) {
+      const countryData = COUNTRIES.find(c => c.value === country);
+      if (countryData?.tld && !extensions.includes(countryData.tld)) {
+        extensions.push(countryData.tld);
+      }
+    }
+    return extensions;
+  };
+
+  const allDomainExtensions = getDomainExtensions();
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -121,7 +136,7 @@ const NameDetailsModal = ({
                 {nameData.domainStatus === 'error' && <p className="text-destructive text-sm">Could not check domains.</p>}
                 {nameData.domainStatus === 'done' && nameData.domains && (
                      <ul className="space-y-2">
-                        {DOMAIN_EXTENSIONS.map(ext => {
+                        {allDomainExtensions.map(ext => {
                             const domain = nameData.name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() + ext;
                             const isAvailable = nameData.domains![domain];
                             return (

@@ -18,6 +18,7 @@ import { googleAI } from '@genkit-ai/googleai';
 const GenerateDentalBusinessNamesInputSchema = z.object({
   practiceType: z.string().describe('Type of dental practice (e.g., General, Pediatric).'),
   location: z.string().describe('City or suburb (e.g., Austin).'),
+  country: z.string().optional().describe('Country of the practice (e.g., Australia).'),
   targetAudience: z.array(z.string()).describe('Target audience (e.g., Families, Kids).'),
   brandPersonality: z.array(z.string()).describe('Brand personality (e.g., Friendly, Professional).'),
   mustIncludeWords: z.string().optional().describe('Comma-separated words to include.'),
@@ -71,6 +72,7 @@ const generateNamesPrompt = ai.definePrompt({
 
 Practice Type: {{{practiceType}}}
 Location: {{{location}}}
+Country: {{{country}}}
 Target Audience: {{{targetAudience}}}
 Brand Personality: {{{brandPersonality}}}
 Must-Include Words: {{{mustIncludeWords}}}

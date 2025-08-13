@@ -5,7 +5,7 @@ import { useState, useRef } from 'react';
 import { generateDentalBusinessNames } from '@/ai/flows/generate-dental-business-names';
 import { generateTaglineAndBio } from '@/ai/flows/generate-tagline-and-bio';
 import { checkDomainAvailability } from '@/ai/flows/check-domain-availability';
-import { DOMAIN_EXTENSIONS } from '@/lib/constants';
+import { DOMAIN_EXTENSIONS, COUNTRIES } from '@/lib/constants';
 
 import Header from '@/components/dental-name-craft/Header';
 import GeneratorForm from '@/components/dental-name-craft/GeneratorForm';
@@ -95,11 +95,19 @@ export default function Home() {
     }
   };
 
-  const handleCheckDomains = async (name: string) => {
+  const handleCheckDomains = async (name: string, country?: string) => {
     updateNameInState(name, { domainStatus: 'loading' });
+
+    let extensions = [...DOMAIN_EXTENSIONS];
+    if (country) {
+        const countryData = COUNTRIES.find(c => c.value === country);
+        if (countryData && countryData.tld) {
+            extensions.push(countryData.tld);
+        }
+    }
+
     try {
-        const results = await checkDomainAvailability({ name, extensions: DOMAIN_EXTENSIONS });
-        // Create a map for easy lookup
+        const results = await checkDomainAvailability({ name, extensions });
         const availabilityMap = results.reduce((acc, item) => {
             acc[item.domain] = item.available;
             return acc;
@@ -119,7 +127,7 @@ export default function Home() {
       handleGenerateTaglineAndBio(name.name);
     }
     if (name.domainStatus === 'idle') {
-      handleCheckDomains(name.name);
+      handleCheckDomains(name.name, formInput?.country);
     }
   };
 
@@ -148,6 +156,7 @@ export default function Home() {
           onOpenChange={setIsModalOpen}
           nameData={selectedName}
           onGenerateTagline={handleGenerateTaglineAndBio}
+          country={formInput?.country}
         />
       )}
     </main>

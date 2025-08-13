@@ -4,18 +4,18 @@ import type { GeneratedName } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Heart, CheckCircle2, XCircle, HelpCircle } from 'lucide-react';
+import { Heart, CheckCircle2, XCircle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { DOMAIN_EXTENSIONS } from '@/lib/constants';
 import { Skeleton } from '../ui/skeleton';
 
 interface NameCardProps {
   nameData: GeneratedName;
   onSelectName: (name: GeneratedName) => void;
   onToggleFavorite: (name: string) => void;
+  domainExtensions: string[];
 }
 
-const NameCard = ({ nameData, onSelectName, onToggleFavorite }: NameCardProps) => {
+const NameCard = ({ nameData, onSelectName, onToggleFavorite, domainExtensions }: NameCardProps) => {
 
   return (
     <Card className="flex flex-col h-full hover:shadow-xl hover:-translate-y-1 transition-transform duration-300 bg-card">
@@ -65,10 +65,11 @@ const NameCard = ({ nameData, onSelectName, onToggleFavorite }: NameCardProps) =
             <div className="flex items-center gap-4">
                 {nameData.domainStatus === 'loading' && <Skeleton className="h-5 w-full" />}
                 {nameData.domainStatus === 'error' && <p className="text-xs text-destructive">Could not check domains.</p>}
-                {(nameData.domainStatus === 'idle' || !nameData.domains) && <p className="text-xs text-muted-foreground">Click "See Details" to check.</p>}
-                {nameData.domainStatus === 'done' && nameData.domains && DOMAIN_EXTENSIONS.map(ext => {
+                {(nameData.domainStatus === 'idle' || !nameData.domains) && <p className="text-xs text-muted-foreground">Checking...</p>}
+                {nameData.domainStatus === 'done' && nameData.domains && domainExtensions.map(ext => {
                     const domainName = nameData.name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() + ext;
                     const isAvailable = nameData.domains![domainName];
+                    if (isAvailable === undefined) return null;
                     return (
                         <TooltipProvider key={ext}>
                             <Tooltip>

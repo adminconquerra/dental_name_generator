@@ -27,3 +27,13 @@ export const BRAND_PERSONALITIES = [
 ];
 
 export const DOMAIN_EXTENSIONS = ['.com', '.clinic', '.dentist'];
+
+export const COUNTRIES = [
+    { value: 'australia', label: 'Australia', tld: '.com.au' },
+    { value: 'canada', label: 'Canada', tld: '.ca' },
+    { value: 'uk', label: 'United Kingdom', tld: '.co.uk' },
+    { value: 'new-zealand', label: 'New Zealand', tld: '.co.nz' },
+    { value: 'usa', label: 'United States', tld: '.us' },
+    { value: 'india', label: 'India', tld: '.in' },
+    { value: 'germany', label: 'Germany', tld: '.de' },
+];
