@@ -1,7 +1,7 @@
 'use client';
 
 import type { FormValues, GeneratedName } from '@/lib/types';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { generateDentalBusinessNames } from '@/ai/flows/generate-dental-business-names';
 import { generateTaglineAndBio } from '@/ai/flows/generate-tagline-and-bio';
 import { checkDomainAvailability } from '@/ai/flows/check-domain-availability';
@@ -22,6 +22,7 @@ export default function Home() {
   const [selectedName, setSelectedName] = useState<GeneratedName | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { toast } = useToast();
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const handleGenerateNames = async (data: FormValues, append = false) => {
     if (append) {
@@ -45,6 +46,9 @@ export default function Home() {
         setGeneratedNames(prev => [...prev, ...namesWithStatus]);
       } else {
         setGeneratedNames(namesWithStatus);
+        setTimeout(() => {
+          resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
       }
     } catch (e) {
       const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
@@ -126,7 +130,7 @@ export default function Home() {
         <section id="generator" className="w-full mt-8">
           <GeneratorForm onSubmit={(data) => handleGenerateNames(data, false)} isLoading={isLoading} />
         </section>
-        <section id="results" className="w-full mt-12">
+        <section id="results" ref={resultsRef} className="w-full mt-12 scroll-mt-20">
           <ResultsView
             names={generatedNames}
             isLoading={isLoading}
