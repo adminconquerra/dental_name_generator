@@ -7,6 +7,7 @@ import { generateTaglineAndBio } from '@/ai/flows/generate-tagline-and-bio';
 import { checkDomainAvailability } from '@/ai/flows/check-domain-availability';
 import { DOMAIN_EXTENSIONS, COUNTRIES } from '@/lib/constants';
 
+import CtaStrip from '@/components/dental-name-craft/CtaStrip';
 import Header from '@/components/dental-name-craft/Header';
 import GeneratorForm from '@/components/dental-name-craft/GeneratorForm';
 import ResultsView from '@/components/dental-name-craft/ResultsView';
@@ -134,6 +135,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <CtaStrip />
       <main className="flex-grow flex flex-col items-center p-4 sm:p-8 md:p-12 font-body">
         <div className="w-full max-w-7xl mx-auto">
           <Header />
