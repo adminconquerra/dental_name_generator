@@ -198,7 +198,7 @@ export const COUNTRIES = [
     { value: 'oman', label: 'Oman', tld: '.om' },
     { value: 'pakistan', label: 'Pakistan', tld: '.pk' },
     { value: 'palau', label: 'Palau', tld: '.pw' },
-    { value: 'palestine-state-of', label: 'Palestine, State of', tld: '.ps' },
+    { value: 'palestine', label: 'Palestine', tld: '.ps' },
     { value: 'panama', label: 'Panama', tld: '.pa' },
     { value: 'papua-new-guinea', label: 'Papua New Guinea', tld: '.pg' },
     { value: 'paraguay', label: 'Paraguay', tld: '.py' },

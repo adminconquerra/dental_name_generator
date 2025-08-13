@@ -11,6 +11,7 @@ import Header from '@/components/dental-name-craft/Header';
 import GeneratorForm from '@/components/dental-name-craft/GeneratorForm';
 import ResultsView from '@/components/dental-name-craft/ResultsView';
 import NameDetailsModal from '@/components/dental-name-craft/NameDetailsModal';
+import Footer from '@/components/dental-name-craft/Footer';
 import { useToast } from '@/hooks/use-toast';
 
 export default function Home() {
@@ -132,33 +133,36 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12 font-body">
-      <div className="w-full max-w-7xl mx-auto">
-        <Header />
-        <section id="generator" className="w-full mt-8">
-          <GeneratorForm onSubmit={(data) => handleGenerateNames(data, false)} isLoading={isLoading} />
-        </section>
-        <section id="results" ref={resultsRef} className="w-full mt-12 scroll-mt-20">
-          <ResultsView
-            names={generatedNames}
-            isLoading={isLoading}
-            isGeneratingMore={isGeneratingMore}
-            onSelectName={handleSelectName}
-            formInput={formInput}
-            onGenerateMore={handleGenerateMore}
-            updateNameInState={updateNameInState}
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-grow flex flex-col items-center p-4 sm:p-8 md:p-12 font-body">
+        <div className="w-full max-w-7xl mx-auto">
+          <Header />
+          <section id="generator" className="w-full mt-8">
+            <GeneratorForm onSubmit={(data) => handleGenerateNames(data, false)} isLoading={isLoading} />
+          </section>
+          <section id="results" ref={resultsRef} className="w-full mt-12 scroll-mt-20">
+            <ResultsView
+              names={generatedNames}
+              isLoading={isLoading}
+              isGeneratingMore={isGeneratingMore}
+              onSelectName={handleSelectName}
+              formInput={formInput}
+              onGenerateMore={handleGenerateMore}
+              updateNameInState={updateNameInState}
+            />
+          </section>
+        </div>
+        {selectedName && (
+          <NameDetailsModal
+            isOpen={isModalOpen}
+            onOpenChange={setIsModalOpen}
+            nameData={selectedName}
+            onGenerateTagline={handleGenerateTaglineAndBio}
+            country={formInput?.country}
           />
-        </section>
-      </div>
-      {selectedName && (
-        <NameDetailsModal
-          isOpen={isModalOpen}
-          onOpenChange={setIsModalOpen}
-          nameData={selectedName}
-          onGenerateTagline={handleGenerateTaglineAndBio}
-          country={formInput?.country}
-        />
-      )}
-    </main>
+        )}
+      </main>
+      <Footer />
+    </div>
   );
 }

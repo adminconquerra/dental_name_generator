@@ -72,7 +72,7 @@ const GeneratorForm = ({ onSubmit, isLoading }: GeneratorFormProps) => {
       <CardHeader>
         <CardTitle className="font-headline text-2xl text-primary flex items-center gap-2">
           <Wand2 />
-          Create Your Brand
+          Create Your Dental Brand
         </CardTitle>
       </CardHeader>
       <CardContent>
