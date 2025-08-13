@@ -19,7 +19,7 @@ const Footer = () => {
             />
           </Link>
           <p className="text-sm text-muted-foreground">
-            &copy; {currentYear} Dental NameCraft AI. All Rights Reserved.
+            &copy; {currentYear} Pracxcel. All Rights Reserved.
           </p>
         </div>
         <div className="text-center md:text-left">

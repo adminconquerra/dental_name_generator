@@ -136,21 +136,26 @@ const ResultsView = ({ names, isLoading, isGeneratingMore, onSelectName, formInp
 
   return (
     <div>
-        <div className="flex justify-between items-center mb-6">
-            <h2 className="text-3xl font-headline font-bold text-primary">
-                Generated Names
-                <Badge variant="secondary" className="ml-3 text-lg">{filteredAndSortedNames.length}</Badge>
-            </h2>
-            <Select value={sortOrder} onValueChange={(value) => setSortOrder(value as any)}>
-                <SelectTrigger className="w-[200px]">
-                    <SelectValue placeholder="Sort by..." />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="score">Sort by Total Score</SelectItem>
-                    <SelectItem value="pronounceability">Sort by Pronounceability</SelectItem>
-                    <SelectItem value="length">Sort by Name Length</SelectItem>
-                </SelectContent>
-            </Select>
+        <div className="flex flex-col items-start mb-6">
+            <div className="flex justify-between items-center w-full">
+              <h2 className="text-3xl font-headline font-bold text-primary">
+                  Generated Names
+                  <Badge variant="secondary" className="ml-3 text-lg">{filteredAndSortedNames.length}</Badge>
+              </h2>
+              <Select value={sortOrder} onValueChange={(value) => setSortOrder(value as any)}>
+                  <SelectTrigger className="w-[200px]">
+                      <SelectValue placeholder="Sort by..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                      <SelectItem value="score">Sort by Total Score</SelectItem>
+                      <SelectItem value="pronounceability">Sort by Pronounceability</SelectItem>
+                      <SelectItem value="length">Sort by Name Length</SelectItem>
+                  </SelectContent>
+              </Select>
+            </div>
+            <p className="mt-2 text-muted-foreground max-w-3xl">
+              We've crafted a unique set of names tailored to your practice. Each name includes a total score, pronounceability rating, and real-time domain availability checks to help you make the perfect choice.
+            </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredAndSortedNames.map(name => (
