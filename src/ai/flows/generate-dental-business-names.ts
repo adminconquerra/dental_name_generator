@@ -108,7 +108,7 @@ Your entire output must be a single, valid JSON array conforming to this structu
         category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
         threshold: 'BLOCK_ONLY_HIGH',
       },
-      {
+       {
         category: 'HARM_CATEGORY_HATE_SPEECH',
         threshold: 'BLOCK_ONLY_HIGH',
       },
