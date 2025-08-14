@@ -158,9 +158,9 @@ const ResultsView = ({ names, isLoading, isGeneratingMore, onSelectName, formInp
             </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredAndSortedNames.map(name => (
+        {filteredAndSortedNames.map((name, index) => (
             <NameCard
-              key={name.name}
+              key={`${name.name}-${index}`}
               nameData={{...name, isFavorite: favorites.includes(name.name)}}
               onSelectName={onSelectName}
               onToggleFavorite={handleToggleFavorite}
