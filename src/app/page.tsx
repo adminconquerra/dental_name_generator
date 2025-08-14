@@ -46,7 +46,11 @@ export default function Home() {
       }));
 
       if (append) {
-        setGeneratedNames(prev => [...prev, ...namesWithStatus]);
+        setGeneratedNames(prev => {
+          const existingNames = new Set(prev.map(n => n.name));
+          const uniqueNewNames = namesWithStatus.filter(n => !existingNames.has(n.name));
+          return [...prev, ...uniqueNewNames];
+        });
       } else {
         setGeneratedNames(namesWithStatus);
         setTimeout(() => {
