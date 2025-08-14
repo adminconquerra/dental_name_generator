@@ -11,7 +11,7 @@ const Footer = () => {
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
           <Link href="/" className="mb-4">
             <Image 
-              src="/logo.png" 
+              src="/logo.png?v=2" 
               alt="Pracxcel Logo" 
               width={180} 
               height={72} 

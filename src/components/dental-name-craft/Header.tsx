@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <header className="text-center">
       <div className="flex justify-center items-center gap-4">
-        <Image src="/logo.png" alt="Pracxcel Logo" width={250} height={100} className="h-auto" />
+        <Image src="/logo.png?v=2" alt="Pracxcel Logo" width={250} height={100} className="h-auto" />
       </div>
       <h1 className="mt-4 py-5 text-3xl md:text-4xl font-headline font-bold text-white leading-tight">
         100% Free Dental Name Generator Tool for Dentists | Domains, TLDs & Brand Kit
