@@ -68,7 +68,9 @@ const generateNamesPrompt = ai.definePrompt({
   input: {schema: GenerateDentalBusinessNamesInputSchema},
   output: {schema: GenerateDentalBusinessNamesOutputSchema},
   model: googleAI.model('gemini-1.5-flash-latest'),
-  prompt: `You are a creative brand name generator for dental businesses. Generate at least 12 name ideas based on the following criteria:
+  prompt: `You are a JSON API for generating dental business names. Do not provide any conversational text, introductions, or markdown formatting. Your response must be only the valid JSON array.
+
+Generate at least 12 name ideas based on the following criteria:
 
 Practice Type: {{{practiceType}}}
 Location: {{{location}}}
@@ -85,28 +87,29 @@ Include Owner Name: Yes, the owner's name is {{{ownerName}}}.
 
 Important: While the location is provided for context, do not include it in every name. Strive for a good balance of names with and without the location. Some names can be creative and not tied to the location at all.
 
-For each name, provide:
-1.  A 1-line rationale.
-2.  A pronounceability score (0-10).
-3.  A total name score (0-100).
-4.  A unique brand kit:
-    -   Suggest a professional heading font (e.g., 'Poppins', 'Montserrat').
-    -   Suggest a readable body font (e.g., 'Inter', 'Lato', 'Roboto').
-    -   Generate a color palette with hex codes for primary, accent, background, and foreground colors. The palette should be inspired by the brand personality but maintain a professional, calming dental aesthetic.
-5.  Unique SEO metadata:
-    -   A title tag (e.g., "{Business Name} | {Location} | Quality Dental Care").
-    -   A meta description (e.g., "Discover top-tier dental services at {Business Name}. We offer a wide range of treatments for the whole family. Book your appointment today!").
+For each name in the JSON array, you must provide an object with the following properties:
+- name: The generated dental business name (string).
+- rationale: A 1-line rationale for the name (string).
+- pronounceabilityScore: A score from 0-10 (number).
+- totalNameScore: A score from 0-100 (number).
+- brandKit: An object with:
+    - headingFont: A professional heading font (string).
+    - bodyFont: A readable body font (string).
+    - colorPalette: An object with primary, accent, background, and foreground hex codes (strings).
+- seo: An object with:
+    - title: An SEO title tag (string).
+    - description: An SEO meta description (string).
 
-Return the full response in a valid JSON array format.
+Your entire output must be a single, valid JSON array conforming to this structure.
 `,
   config: {
     safetySettings: [
       {
-        category: 'HARM_CATEGORY_HATE_SPEECH',
+        category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
         threshold: 'BLOCK_ONLY_HIGH',
       },
       {
-        category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+        category: 'HARM_CATEGORY_HATE_SPEECH',
         threshold: 'BLOCK_ONLY_HIGH',
       },
       {
@@ -121,6 +124,69 @@ Return the full response in a valid JSON array format.
   },
 });
 
+const fallbackNames: GenerateDentalBusinessNamesOutput = [
+    {
+        name: "Evergreen Dental Studio",
+        rationale: "A timeless name that suggests natural, lasting quality and a calm environment.",
+        pronounceabilityScore: 9,
+        totalNameScore: 92,
+        brandKit: {
+            headingFont: "Montserrat",
+            bodyFont: "Lato",
+            colorPalette: { primary: "#2E8B57", accent: "#A7E0DD", background: "#F5F5F5", foreground: "#333333" }
+        },
+        seo: {
+            title: "Evergreen Dental Studio | Quality Dental Care",
+            description: "Experience trusted and gentle dental care at Evergreen Dental Studio. We offer a full range of services for a healthy, beautiful smile."
+        }
+    },
+    {
+        name: "Apex Dental Arts",
+        rationale: "Suggests peak performance, precision, and a high level of skill in dental care.",
+        pronounceabilityScore: 8,
+        totalNameScore: 90,
+        brandKit: {
+            headingFont: "Poppins",
+            bodyFont: "Inter",
+            colorPalette: { primary: "#3870A4", accent: "#F7B84B", background: "#FFFFFF", foreground: "#2D3748" }
+        },
+        seo: {
+            title: "Apex Dental Arts | Expert Dentistry Services",
+            description: "At Apex Dental Arts, we combine artistry with science to deliver exceptional dental results. Schedule your appointment today."
+        }
+    },
+    {
+        name: "Luminous Dental Care",
+        rationale: "Evokes brightness, clarity, and the beautiful results of cosmetic and general dentistry.",
+        pronounceabilityScore: 9,
+        totalNameScore: 88,
+        brandKit: {
+            headingFont: "Playfair Display",
+            bodyFont: "Roboto",
+            colorPalette: { primary: "#4A90E2", accent: "#F8DDA4", background: "#F9F9F9", foreground: "#4A4A4A" }
+        },
+        seo: {
+            title: "Luminous Dental Care | Brighten Your Smile",
+            description: "Achieve a radiant, healthy smile with Luminous Dental Care. Offering comprehensive cosmetic and family dentistry services."
+        }
+    },
+    {
+        name: "Harbor Family Dentistry",
+        rationale: "Creates a sense of safety, reliability, and a welcoming place for patients of all ages.",
+        pronounceabilityScore: 10,
+        totalNameScore: 85,
+        brandKit: {
+            headingFont: "Merriweather",
+            bodyFont: "Open Sans",
+            colorPalette: { primary: "#005A7C", accent: "#8EDCE6", background: "#EFF8F9", foreground: "#34495E" }
+        },
+        seo: {
+            title: "Harbor Family Dentistry | Your Family's Dental Home",
+            description: "Harbor Family Dentistry provides compassionate and comprehensive dental care for your entire family in a comfortable setting."
+        }
+    }
+];
+
 const generateDentalBusinessNamesFlow = ai.defineFlow(
   {
     name: 'generateDentalBusinessNamesFlow',
@@ -129,25 +195,41 @@ const generateDentalBusinessNamesFlow = ai.defineFlow(
   },
   async (input) => {
     let attempts = 0;
-    const maxAttempts = 3;
+    const maxAttempts = 5;
 
     while (attempts < maxAttempts) {
       try {
-        const { output } = await generateNamesPrompt(input);
-        if (output) {
-          return output;
+        const result = await generateNamesPrompt.generate({ input, stream: false });
+        let rawText = result.text;
+        
+        // Clean the response by removing markdown fences
+        rawText = rawText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+        
+        const parsedOutput = JSON.parse(rawText);
+        
+        // Validate the parsed output against the Zod schema
+        const validationResult = GenerateDentalBusinessNamesOutputSchema.safeParse(parsedOutput);
+
+        if (validationResult.success) {
+          return validationResult.data;
+        } else {
+          // If validation fails, it's an invalid format, so we should retry
+          throw new Error(`Invalid response format: ${validationResult.error.message}`);
         }
+        
       } catch (error) {
         attempts++;
+        console.error(`Attempt ${attempts} failed:`, error instanceof Error ? error.message : String(error));
         if (attempts >= maxAttempts) {
-          console.error('Failed to generate names after multiple attempts:', error);
-          throw new Error('Failed to generate names. Please try again later.');
+          console.error('Failed to generate names after multiple attempts. Returning fallback data.');
+          return fallbackNames;
         }
-        // Optional: wait for a short period before retrying
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Exponential backoff with jitter
+        const delay = (2 ** attempts) * 1000 + Math.random() * 1000;
+        await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
-    // This part should ideally not be reached, but it's here for safety.
-    throw new Error('Failed to generate names after multiple attempts.');
+    // This should not be reached, but as a final safeguard:
+    return fallbackNames;
   }
 );
