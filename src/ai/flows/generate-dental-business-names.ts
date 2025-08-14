@@ -68,9 +68,7 @@ const generateNamesPrompt = ai.definePrompt({
   input: {schema: GenerateDentalBusinessNamesInputSchema},
   output: {schema: GenerateDentalBusinessNamesOutputSchema},
   model: googleAI.model('gemini-1.5-flash-latest'),
-  prompt: `You are a JSON API for generating dental business names. Do not provide any conversational text, introductions, or markdown formatting. Your response must be only the valid JSON array.
-
-Generate at least 12 name ideas based on the following criteria:
+  prompt: `You are an expert at generating dental business names. Generate at least 12 name ideas based on the following criteria.
 
 Practice Type: {{{practiceType}}}
 Location: {{{location}}}
@@ -86,21 +84,6 @@ Include Owner Name: Yes, the owner's name is {{{ownerName}}}.
 {{/if}}
 
 Important: While the location is provided for context, do not include it in every name. Strive for a good balance of names with and without the location. Some names can be creative and not tied to the location at all.
-
-For each name in the JSON array, you must provide an object with the following properties:
-- name: The generated dental business name (string).
-- rationale: A 1-line rationale for the name (string).
-- pronounceabilityScore: A score from 0-10 (number).
-- totalNameScore: A score from 0-100 (number).
-- brandKit: An object with:
-    - headingFont: A professional heading font (string).
-    - bodyFont: A readable body font (string).
-    - colorPalette: An object with primary, accent, background, and foreground hex codes (strings).
-- seo: An object with:
-    - title: An SEO title tag (string).
-    - description: An SEO meta description (string).
-
-Your entire output must be a single, valid JSON array conforming to this structure.
 `,
   config: {
     safetySettings: [
@@ -131,42 +114,10 @@ const generateDentalBusinessNamesFlow = ai.defineFlow(
     outputSchema: GenerateDentalBusinessNamesOutputSchema,
   },
   async (input) => {
-    let attempts = 0;
-    const maxAttempts = 5;
-
-    while (attempts < maxAttempts) {
-      try {
-        const result = await generateNamesPrompt.generate({ input, stream: false });
-        let rawText = result.text;
-        
-        // Clean the response by removing markdown fences
-        rawText = rawText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
-        
-        const parsedOutput = JSON.parse(rawText);
-        
-        // Validate the parsed output against the Zod schema
-        const validationResult = GenerateDentalBusinessNamesOutputSchema.safeParse(parsedOutput);
-
-        if (validationResult.success) {
-          return validationResult.data;
-        } else {
-          // If validation fails, it's an invalid format, so we should retry
-          throw new Error(`Invalid response format: ${validationResult.error.message}`);
-        }
-        
-      } catch (error) {
-        attempts++;
-        console.error(`Attempt ${attempts} failed:`, error instanceof Error ? error.message : String(error));
-        if (attempts >= maxAttempts) {
-          // If all retries fail, propagate the error to the frontend
-          throw new Error('Failed to generate business names after multiple attempts. Please try again later.');
-        }
-        // Exponential backoff with jitter
-        const delay = (2 ** attempts) * 1000 + Math.random() * 1000;
-        await new Promise(resolve => setTimeout(resolve, delay));
-      }
+    const { output } = await generateNamesPrompt(input);
+    if (!output) {
+        throw new Error("Failed to generate business names. The AI model did not return a valid response.");
     }
-    // This should not be reached, but as a final safeguard:
-    throw new Error('An unexpected error occurred during name generation.');
+    return output;
   }
 );
