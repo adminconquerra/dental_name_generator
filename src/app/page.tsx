@@ -15,6 +15,9 @@ import NameDetailsModal from '@/components/dental-name-craft/NameDetailsModal';
 import Footer from '@/components/dental-name-craft/Footer';
 import { useToast } from '@/hooks/use-toast';
 import Testimonials from '@/components/dental-name-craft/Testimonials';
+import { useUsageTracker } from '@/hooks/useUsageTracker';
+import { isRateLimited } from '@/ai/flows/rate-limiter';
+
 
 export default function Home() {
   const [formInput, setFormInput] = useState<FormValues | null>(null);
@@ -26,8 +29,34 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { toast } = useToast();
   const resultsRef = useRef<HTMLDivElement>(null);
+  const { canGenerate, recordGeneration } = useUsageTracker();
 
   const handleGenerateNames = async (data: FormValues, append = false) => {
+    
+    if (!canGenerate()) {
+      toast({
+        variant: 'destructive',
+        title: 'Daily Limit Reached',
+        description: 'You have exhausted the daily limit try again tomorrow.',
+      });
+      return;
+    }
+
+    try {
+      const rateLimited = await isRateLimited();
+      if(rateLimited) {
+        toast({
+            variant: 'destructive',
+            title: 'You are doing that too often',
+            description: 'Please wait a bit before generating more names.',
+        });
+        return;
+      }
+    } catch (e) {
+        // We can ignore this and let the backend handle it
+    }
+
+
     if (append) {
       setIsGeneratingMore(true);
     } else {
@@ -39,6 +68,7 @@ export default function Home() {
 
     try {
       const results = await generateDentalBusinessNames(data);
+      recordGeneration();
       const namesWithStatus = results.map(name => ({
         ...name,
         taglineStatus: 'idle',
