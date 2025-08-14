@@ -124,69 +124,6 @@ Your entire output must be a single, valid JSON array conforming to this structu
   },
 });
 
-const fallbackNames: GenerateDentalBusinessNamesOutput = [
-    {
-        name: "Evergreen Dental Studio",
-        rationale: "A timeless name that suggests natural, lasting quality and a calm environment.",
-        pronounceabilityScore: 9,
-        totalNameScore: 92,
-        brandKit: {
-            headingFont: "Montserrat",
-            bodyFont: "Lato",
-            colorPalette: { primary: "#2E8B57", accent: "#A7E0DD", background: "#F5F5F5", foreground: "#333333" }
-        },
-        seo: {
-            title: "Evergreen Dental Studio | Quality Dental Care",
-            description: "Experience trusted and gentle dental care at Evergreen Dental Studio. We offer a full range of services for a healthy, beautiful smile."
-        }
-    },
-    {
-        name: "Apex Dental Arts",
-        rationale: "Suggests peak performance, precision, and a high level of skill in dental care.",
-        pronounceabilityScore: 8,
-        totalNameScore: 90,
-        brandKit: {
-            headingFont: "Poppins",
-            bodyFont: "Inter",
-            colorPalette: { primary: "#3870A4", accent: "#F7B84B", background: "#FFFFFF", foreground: "#2D3748" }
-        },
-        seo: {
-            title: "Apex Dental Arts | Expert Dentistry Services",
-            description: "At Apex Dental Arts, we combine artistry with science to deliver exceptional dental results. Schedule your appointment today."
-        }
-    },
-    {
-        name: "Luminous Dental Care",
-        rationale: "Evokes brightness, clarity, and the beautiful results of cosmetic and general dentistry.",
-        pronounceabilityScore: 9,
-        totalNameScore: 88,
-        brandKit: {
-            headingFont: "Playfair Display",
-            bodyFont: "Roboto",
-            colorPalette: { primary: "#4A90E2", accent: "#F8DDA4", background: "#F9F9F9", foreground: "#4A4A4A" }
-        },
-        seo: {
-            title: "Luminous Dental Care | Brighten Your Smile",
-            description: "Achieve a radiant, healthy smile with Luminous Dental Care. Offering comprehensive cosmetic and family dentistry services."
-        }
-    },
-    {
-        name: "Harbor Family Dentistry",
-        rationale: "Creates a sense of safety, reliability, and a welcoming place for patients of all ages.",
-        pronounceabilityScore: 10,
-        totalNameScore: 85,
-        brandKit: {
-            headingFont: "Merriweather",
-            bodyFont: "Open Sans",
-            colorPalette: { primary: "#005A7C", accent: "#8EDCE6", background: "#EFF8F9", foreground: "#34495E" }
-        },
-        seo: {
-            title: "Harbor Family Dentistry | Your Family's Dental Home",
-            description: "Harbor Family Dentistry provides compassionate and comprehensive dental care for your entire family in a comfortable setting."
-        }
-    }
-];
-
 const generateDentalBusinessNamesFlow = ai.defineFlow(
   {
     name: 'generateDentalBusinessNamesFlow',
@@ -221,8 +158,8 @@ const generateDentalBusinessNamesFlow = ai.defineFlow(
         attempts++;
         console.error(`Attempt ${attempts} failed:`, error instanceof Error ? error.message : String(error));
         if (attempts >= maxAttempts) {
-          console.error('Failed to generate names after multiple attempts. Returning fallback data.');
-          return fallbackNames;
+          // If all retries fail, propagate the error to the frontend
+          throw new Error('Failed to generate business names after multiple attempts. Please try again later.');
         }
         // Exponential backoff with jitter
         const delay = (2 ** attempts) * 1000 + Math.random() * 1000;
@@ -230,6 +167,6 @@ const generateDentalBusinessNamesFlow = ai.defineFlow(
       }
     }
     // This should not be reached, but as a final safeguard:
-    return fallbackNames;
+    throw new Error('An unexpected error occurred during name generation.');
   }
 );
