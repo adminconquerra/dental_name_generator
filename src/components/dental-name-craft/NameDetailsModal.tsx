@@ -57,7 +57,7 @@ const NameDetailsModal = ({
 
   const allDomainExtensions = getDomainExtensions();
 
-  const affiliateLink = 'https://crazydomains.sjv.io/kOG1Vx';
+  const affiliateLink = 'https://crazydomains.sjv.io/DyzZBG';
 
   const getAffiliateLink = (domain: string) => {
     const destinationUrl = `https://www.crazydomains.com.au/domain-names/search/?domain=${domain}`;
