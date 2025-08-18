@@ -57,11 +57,11 @@ const NameDetailsModal = ({
 
   const allDomainExtensions = getDomainExtensions();
 
-  const affiliateId = process.env.NAMECHEAP_AFFILIATE_ID;
+  const affiliateLink = 'https://crazydomains.sjv.io/kOG1Vx';
 
   const getAffiliateLink = (domain: string) => {
-    if (!affiliateId) return `https://www.namecheap.com/domains/registration/results/?domain=${domain}`;
-    return `https://www.namecheap.com/domains/registration/results/?domain=${domain}&affId=${affiliateId}`;
+    const destinationUrl = `https://www.crazydomains.com.au/domain-names/search/?domain=${domain}`;
+    return `${affiliateLink}?u=${encodeURIComponent(destinationUrl)}`;
   }
 
   return (
