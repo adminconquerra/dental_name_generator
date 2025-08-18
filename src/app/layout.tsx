@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     title: '100% Free Dental Business Name Generator Tool. No Signups.',
     description:
       '100% free dental business name generator. No signup. Get instant name ideas + domain & country TLD checks, brand guidelines, and color palettes.',
-    url: 'https://pracxcel.com.au', // Replace with actual domain
+    url: 'https://freedentalbusinessnamegenerator.pracxcel.com/',
     siteName: 'Pracxcel',
     images: [
       {
@@ -38,6 +38,17 @@ export const metadata: Metadata = {
     ],
     locale: 'en_US',
     type: 'website',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  metadataBase: new URL('https://freedentalbusinessnamegenerator.pracxcel.com/'),
+  alternates: {
+    canonical: '/',
+  },
+  verification: {
+    google: 'AG4TzpriRUN9_b2sKPsmAcqrocZBkHPnsUz6cjeit1Y',
   },
 };
 
