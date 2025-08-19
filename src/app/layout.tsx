@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     title: '100% Free Dental Business Name Generator Tool. No Signups.',
     description:
       '100% free dental business name generator. No signup. Get instant name ideas + domain & country TLD checks, brand guidelines, and color palettes.',
-    url: 'https://freedentalbusinessnamegenerator.pracxcel.com/',
+    url: 'https://freedentalbusinessnamegenerator.pracxcel.com.au/',
     siteName: 'Pracxcel',
     images: [
       {
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  metadataBase: new URL('https://freedentalbusinessnamegenerator.pracxcel.com/'),
+  metadataBase: new URL('https://freedentalbusinessnamegenerator.pracxcel.com.au/'),
   alternates: {
     canonical: '/',
   },
@@ -57,25 +57,25 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "WebSite",
-      "@id": "https://freedentalbusinessnamegenerator.pracxcel.com/",
-      "url": "https://freedentalbusinessnamegenerator.pracxcel.com/",
+      "@id": "https://freedentalbusinessnamegenerator.pracxcel.com.au/",
+      "url": "https://freedentalbusinessnamegenerator.pracxcel.com.au/",
       "name": "Free Dental Business Name Generator Tool",
       "description": "Instant, 100% free dental business name generator with domain & country TLD checks, mini brand kit, and color palette suggestions. No signup.",
       "inLanguage": "en",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://freedentalbusinessnamegenerator.pracxcel.com/",
+        "target": "https://freedentalbusinessnamegenerator.pracxcel.com.au/",
         "query-input": "required name=search_term_string"
       }
     },
     {
       "@type": "Organization",
-      "@id": "https://freedentalbusinessnamegenerator.pracxcel.com/",
+      "@id": "https://freedentalbusinessnamegenerator.pracxcel.com.au/",
       "name": "Free Dental Business Name Generator Tool",
-      "url": "https://freedentalbusinessnamegenerator.pracxcel.com/",
+      "url": "https://freedentalbusinessnamegenerator.pracxcel.com.au/",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://freedentalbusinessnamegenerator.pracxcel.com/_next/image?url=%2Flogo.png%3Fv%3D2&w=256&q=75",
+        "url": "https://freedentalbusinessnamegenerator.pracxcel.com.au/_next/image?url=%2Flogo.png%3Fv%3D2&w=256&q=75",
         "width": 120,
         "height": 120
       },
@@ -86,9 +86,9 @@ const jsonLd = {
     },
     {
       "@type": "SoftwareApplication",
-      "@id": "https://freedentalbusinessnamegenerator.pracxcel.com/",
+      "@id": "https://freedentalbusinessnamegenerator.pracxcel.com.au/",
       "name": "Free Dental Business Name Generator Tool",
-      "url": "https://freedentalbusinessnamegenerator.pracxcel.com/",
+      "url": "https://freedentalbusinessnamegenerator.pracxcel.com.au/",
       "description": "Generate memorable dental practice names instantly — free, no signup. Includes domain & country TLD checks, mini brand kit, color palette suggestions, and logo prompts. Compatible with modern browsers.",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
@@ -104,16 +104,16 @@ const jsonLd = {
       },
       "author": {
         "@type": "Organization",
-        "@id": "https://freedentalbusinessnamegenerator.pracxcel.com/"
+        "@id": "https://freedentalbusinessnamegenerator.pracxcel.com.au/"
       },
       "publisher": {
         "@type": "Organization",
-        "@id": "https://freedentalbusinessnamegenerator.pracxcel.com/"
+        "@id": "https://freedentalbusinessnamegenerator.pracxcel.com.au/"
       },
       "screenshot": [
         {
           "@type": "ImageObject",
-          "url": "https://freedentalbusinessnamegenerator.pracxcel.com/_next/image?url=%2Flogo.png%3Fv%3D2&w=256&q=75",
+          "url": "https://freedentalbusinessnamegenerator.pracxcel.com.au/_next/image?url=%2Flogo.png%3Fv%3D2&w=256&q=75",
           "caption": "Free Dental Business Name Generator Tool"
         }
       ],
@@ -140,7 +140,7 @@ const jsonLd = {
       },
       "mainEntity": {
         "@type": "WebPage",
-        "@id": "https://freedentalbusinessnamegenerator.pracxcel.com/"
+        "@id": "https://freedentalbusinessnamegenerator.pracxcel.com.au/"
       },
       "review": [
         {
