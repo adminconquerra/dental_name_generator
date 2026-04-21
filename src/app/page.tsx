@@ -89,11 +89,12 @@ export default function Home() {
       }
     } catch (e) {
       const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
+      console.error('Name generation error:', e);
       setError(errorMessage);
       toast({
         variant: 'destructive',
         title: 'Error Generating Names',
-        description: 'Please try adjusting your criteria and submit again.',
+        description: errorMessage,
       });
     } finally {
       setIsLoading(false);

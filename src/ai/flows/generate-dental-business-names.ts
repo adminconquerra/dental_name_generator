@@ -114,10 +114,15 @@ const generateDentalBusinessNamesFlow = ai.defineFlow(
     outputSchema: GenerateDentalBusinessNamesOutputSchema,
   },
   async (input) => {
-    const { output } = await generateNamesPrompt(input);
-    if (!output) {
-        throw new Error("Failed to generate business names. The AI model did not return a valid response.");
+    try {
+      const { output } = await generateNamesPrompt(input);
+      if (!output) {
+          throw new Error("Failed to generate business names. The AI model did not return a valid response.");
+      }
+      return output;
+    } catch (e) {
+      console.error('Genkit flow error:', e);
+      throw e;
     }
-    return output;
   }
 );
