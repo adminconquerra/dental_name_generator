@@ -31,7 +31,7 @@ const generateTaglineAndBioPrompt = ai.definePrompt({
   name: 'generateTaglineAndBioPrompt',
   input: {schema: GenerateTaglineAndBioInputSchema},
   output: {schema: GenerateTaglineAndBioOutputSchema},
-  model: googleAI.model('gemini-2.0-flash'),
+  model: googleAI.model('gemini-flash-latest'),
   prompt: `You are a branding expert specializing in creating taglines and social media bios for businesses.
 
   Generate a one-line tagline and a short social media bio (150 characters max) for the following business:

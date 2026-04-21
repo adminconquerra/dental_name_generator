@@ -40,7 +40,7 @@ const prompt = ai.definePrompt({
   name: 'scoreDentalBusinessNamePrompt',
   input: {schema: ScoreDentalBusinessNameInputSchema},
   output: {schema: ScoreDentalBusinessNameOutputSchema},
-  model: googleAI.model('gemini-2.0-flash'),
+  model: googleAI.model('gemini-flash-latest'),
   prompt: `You are an expert in branding and naming for dental businesses.
 
 You will receive a dental business name, and you will score it based on its pronounceability and suitability for a dental business.
