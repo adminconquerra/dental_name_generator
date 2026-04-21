@@ -67,7 +67,7 @@ const generateNamesPrompt = ai.definePrompt({
   name: 'generateNamesPrompt',
   input: {schema: GenerateDentalBusinessNamesInputSchema},
   output: {schema: GenerateDentalBusinessNamesOutputSchema},
-  model: googleAI.model('gemini-1.5-flash-latest'),
+  model: googleAI.model('gemini-2.0-flash'),
   prompt: `You are an expert at generating dental business names. Generate at least 12 name ideas based on the following criteria.
 
 Practice Type: {{{practiceType}}}
